@@ -96,24 +96,63 @@ public class ClientHandler extends Thread{
 	
 	
 	public void join(int friend) {
-		boolean first=false;
 		Socket  client;
 		try {
 			client=new Socket("localhost",friend);
 			} catch (UnknownHostException e) {
 				for(int i=0;i<Vars.m;i++){
-				//	parameters.fingerTable.add(new Successor())
+					Successor temp=new Successor(new BigInteger("2").pow(i),
+							new BigInteger("2").pow(i+1),parameters.nodeName,parameters.port);
+					parameters.fingerTable.add(temp);
 				}
-				first=true;
-				e.printStackTrace();
-				 
+				parameters.succ=parameters.nodeName;
+				parameters.pred=parameters.nodeName;
+				parameters.succPort=parameters.port;
+				parameters.predPort=parameters.port;
+				return;
+			//	e.printStackTrace();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
+		initFingerTable(friend);
+	//  notify();
+	//  get successor S
+	// move the keys to n
 		
 	}
+	
+	
+	public void initFingerTable(int port){
+		OurRMI ourRMI=new OurRMI(port,"findSuccessor:"+parameters.fingerTable.get(1).intervalStart.toString()+": "+": "+": ");
+		String res=ourRMI.result();
+		parameters.fingerTable.get(1).node = new BigInteger(res.split(" ")[0]);
+		parameters.fingerTable.get(1).port= Integer.parseInt(res.split(" ")[1]);
+		
+		for(int i=0;i<Vars.m;i++){
+			if(Vars.isInRange(true,false,parameters.nodeName, parameters.fingerTable.get(i).node,parameters.fingerTable.get(i+1).intervalStart)){
+				parameters.fingerTable.get(i+1).node = parameters.fingerTable.get(i).node;
+				parameters.fingerTable.get(i+1).port = parameters.fingerTable.get(i).port;
+			}
+			else{
+				ourRMI=new OurRMI(port,"findSuccessor:"+parameters.fingerTable.get(1).intervalStart.toString()+": "+": "+": ");
+				res=ourRMI.result();
+				parameters.fingerTable.get(i+1).node = new BigInteger(res.split(" ")[0]);
+				parameters.fingerTable.get(i+1).port= Integer.parseInt(res.split(" ")[1]);
+			}
+		}
+	}
+	
+	
+	public void notifyAl(){
+		OurRMI ourRMI;
+		String res;
+		for(int i=0;i<Vars.m;i++){
+			res=findPredecessor(parameters.nodeName.subtract(new BigInteger("2").pow(i)));
+		}
+	}
+	
 	
 	
 }

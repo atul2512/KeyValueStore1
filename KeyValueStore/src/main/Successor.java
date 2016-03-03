@@ -8,10 +8,10 @@ public class Successor {
 	BigInteger node;
 	int port;
 	
-	public Successor(BigInteger is, BigInteger ie, BigInteger n, int p) {
-		intervalStart = is;
-		intervalEnd = ie;
-		node = n;
-		port = p;
+	public Successor(BigInteger intervalStart, BigInteger intervalEnd, BigInteger node, int port) {
+		this.intervalStart = intervalStart;
+		this.intervalEnd = intervalEnd;
+		this.node = node;
+		this.port = port;
 	}
 }

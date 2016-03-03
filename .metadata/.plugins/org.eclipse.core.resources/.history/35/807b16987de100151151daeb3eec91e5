@@ -1,0 +1,15 @@
+package serverPort;
+
+import java.net.Socket;
+
+import main.PeerVar;
+
+public class ClientHandNP {
+	Socket server;
+	int port;
+	ClientHandlerNP(Socket conn,int port,PeerVar parameters){
+		this.server=conn;
+		this.port=port;
+	}
+	
+}

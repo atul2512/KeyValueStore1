@@ -12,6 +12,7 @@ public class PeerVar {
 	BigInteger nodeName;
 //	PeerNode Successor,Predecessor;
 	BigInteger succ,pred;
+	int succPort,predPort;
 	
 	PeerVar(int port,String filePath){
 		this.port=port;
