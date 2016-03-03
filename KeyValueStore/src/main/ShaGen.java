@@ -13,7 +13,7 @@ public class ShaGen {
 			md.update(input.getBytes());
 			byte[] digest = md.digest();
 			result=new BigInteger(1,digest);
-			result=result.mod(new BigInteger("2").pow(40));		
+			result=result.mod(new BigInteger("2").pow(Vars.m));		
 			//			System.out.println("MD5 fingerprint: " + result);
 			
 		} catch (NoSuchAlgorithmException e) {

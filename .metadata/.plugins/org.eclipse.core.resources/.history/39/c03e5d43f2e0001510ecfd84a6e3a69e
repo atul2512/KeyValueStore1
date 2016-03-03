@@ -1,0 +1,15 @@
+package main;
+
+import java.math.BigInteger;
+import java.util.Map;
+
+public class PeerVar {
+
+	String filePath="";
+	int port;
+	Map<BigInteger,Successor> fingerTable;
+	BigInteger nodeName;
+	PeerNode Successor,Predecessor;
+	BigInteger succ,pred;
+	
+}

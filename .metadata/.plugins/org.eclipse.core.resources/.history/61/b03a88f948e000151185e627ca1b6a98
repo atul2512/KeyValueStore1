@@ -1,0 +1,69 @@
+import java.util.*;
+
+class node{
+	int position;
+	int length;
+	
+	node(int position,int length){
+		this.position=position;
+		this.length=length;
+	}
+}
+
+public class Goo {
+	
+	public static int findMax(String t){
+		int max=0;
+		
+		StringBuilder sb=null;
+		boolean start=true;
+		int position=0;
+		Stack<node> st=new Stack<node>();
+		
+		for(int i=0;i<t.length();i++){
+			if(start){
+				sb=new StringBuilder();
+			}
+			
+			if(t.charAt(i)=='\n'){
+				while(!st.isEmpty()){
+					if(st.peek().position >= position)
+							st.pop();
+					else
+							break;
+				}
+				if(st.isEmpty())
+					st.push(new node(position,sb.length()));
+				else 
+					st.push(new node(position,st.peek().length+sb.length()));
+				
+				if(max < st.peek().length)
+						max=st.peek().length;
+				
+				start=true;
+				position=0;
+				continue;
+			}
+			
+			if(t.charAt(i)==' '){
+				position++;
+			}
+			else{
+				sb.append(t.charAt(i));
+			}
+		}
+		
+		
+		return max;
+	}
+	
+	
+	public static void main(String[] args){
+		
+		System.out.println(findMax("Dir1\nDir2\n Dir3\n  index.jpeg\n  index23.png\n Dir4\n  printer.jpeg"));
+		
+		
+	}
+	
+
+}

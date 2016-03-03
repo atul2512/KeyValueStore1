@@ -7,18 +7,11 @@ import java.net.*;
 import java.util.Date;
 
 public class PeerNode {
-	ArrayList<Integer> peerPorts=new ArrayList<Integer>();
-	String filePath="";
-	int port;
-	Map<BigInteger,Successor> fingerTable;
-	
+	PeerVar parameters;
 
 	public PeerNode(int port2, String filePath2) {
 		// TODO Auto-generated constructor stub
-		this.port=port2;
-		this.filePath=filePath2;
-		fingerTable=new LinkedHashMap<BigInteger,Successor>();
-		
+		parameters=new PeerVar(port2,filePath2);
 		new Thread(new Runnable(){
 			public void run(){
 				try {
@@ -34,13 +27,13 @@ public class PeerNode {
 
 
 	public void ServerThread() throws IOException{
-		ServerSocket s = new ServerSocket(port);
-    	System.out.println("Server socket created at port "+port+" and waiting....");
+		ServerSocket s = new ServerSocket(parameters.port);
+    	System.out.println("Server socket created at port "+parameters.port+" and waiting....");
         while(true)
         {  	
         	Socket conn = s.accept();
         	System.out.println("Connection received from: " + conn.getInetAddress().getHostName() + " : " + conn.getPort());
-        	new ClientHandler(conn,port,fingerTable).start();  
+        	new ClientHandler(conn,parameters.port,parameters).start();  
         }
 	}
 	
@@ -59,10 +52,28 @@ public class PeerNode {
         client.close();
 	}
 	
-	
-	public void join(PeerNode coord){
+	/*
+	public BigInteger findSuccessor(BigInteger ){
 		
-	}
+	} */
+	
+	/*
+	public void join(PeerNode coord){
+		try {
+		Socket  client=new Socket("localhost",port);
+		
+	     
+	//	     System.out.println("Server says " + in.readUTF());
+		
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	} */
 	
 	
 	

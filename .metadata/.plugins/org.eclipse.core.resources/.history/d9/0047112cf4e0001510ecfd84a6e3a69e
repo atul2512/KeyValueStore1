@@ -1,0 +1,13 @@
+package main;
+
+import java.math.BigInteger;
+
+public class Vars {
+	static int m=40;
+	boolean isInRange(boolean leftInclude,boolean rightInclude,BigInteger left,BigInteger right,BigInteger id){
+		
+		
+		
+		return true;
+	}
+}

@@ -1,0 +1,29 @@
+package main;
+
+import java.math.BigInteger;
+
+public class Vars {
+	static int m=40;
+	boolean isInRange(boolean leftInclude,boolean rightInclude,BigInteger left,BigInteger right,BigInteger id){
+		
+		if(left.compareTo(right)>=0){
+			return isInRange(leftInclude,true,left,new BigInteger("2").pow(Vars.m).subtract("1"))
+		}
+		
+		
+		if(leftInclude && rightInclude){
+			(id.compareTo(left)>=
+		}
+		else if(leftInclude){
+			
+		}
+		else if(rightInclude){
+			
+		}
+		else{
+			
+		}
+		
+		return true;
+	}
+}
