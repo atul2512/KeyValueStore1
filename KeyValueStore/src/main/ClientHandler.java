@@ -22,30 +22,42 @@ public class ClientHandler extends Thread{
          DataInputStream in = null;
 		try {
 			in = new DataInputStream(server.getInputStream());
-			
-			String recevied = in.readUTF();
-			
-			
-			
-			
-			System.out.println("recevied msg: "+recevied);
-			
+			String received = in.readUTF();
+			String[] arguments = received.split(":");
+			System.out.println("recevied msg: "+received);
 			
 			DataOutputStream out = null;
-			
 			out = new DataOutputStream(server.getOutputStream());
 			
+			switch(arguments[0]) {
+				case "closestPrecedingFinger" : out.writeUTF(closestPrecedingFinger(new BigInteger(arguments[1])));
+												break;
+				case "findPredecessor" 		  : out.writeUTF(findPredecessor(new BigInteger(arguments[1])));
+												break;
+				case "findSuccessor:"		  : out.writeUTF(findSuccessor(new BigInteger(arguments[1])));
+												break;
+				case "join"					  : join(Integer.parseInt(arguments[1]));
+												break;
+				case "getPredecessor"		  : out.writeUTF(getPredecessor());
+												break;
+				case "updateFingerTable"	  : updateFingerTable(new BigInteger(arguments[1]), Integer.parseInt(arguments[2]), Integer.parseInt(arguments[3]));
+												break;
+				case "getIthFinger"			  : out.writeUTF(getIthFinger(Integer.parseInt(arguments[1])));
+												break;
+				/*case "moveKeys"				  : out.writeUTF(moveKeys(new BigInteger(arguments[1]))));
+												break;*/
+			}
 			
 			out.writeUTF("Thank you for connecting to "
 				    + server.getLocalSocketAddress() + "\nGoodbye!");
-			
-			
-			
-			
+			server.close();
+		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+//		finally{
+		
 	}
 	
 	
@@ -109,6 +121,9 @@ public class ClientHandler extends Thread{
 				parameters.pred=parameters.nodeName;
 				parameters.succPort=parameters.port;
 				parameters.predPort=parameters.port;
+				
+				System.out.println("basic join executed:"+parameters.succ);
+				
 				return;
 			//	e.printStackTrace();
 			} catch (IOException e) {
@@ -117,18 +132,30 @@ public class ClientHandler extends Thread{
 			}
 		
 		initFingerTable(friend);
-	//  notify();
+		notifyPeers();
+		
+		OurRMI ourRMI = new OurRMI(parameters.succPort,"getPredecessor:"+": "+": "+": "+": ");
+		String res = ourRMI.result();
+		
+		parameters.pred = new BigInteger(res.split(" ")[0]);
+		parameters.predPort = Integer.parseInt(res.split(" ")[1]);
+		
 	//  get successor S
 	// move the keys to n
 		
 	}
 	
+	public String getPredecessor() {
+		return parameters.pred.toString() + " " + String.valueOf(parameters.predPort);
+	}
 	
 	public void initFingerTable(int port){
 		OurRMI ourRMI=new OurRMI(port,"findSuccessor:"+parameters.fingerTable.get(1).intervalStart.toString()+": "+": "+": ");
 		String res=ourRMI.result();
 		parameters.fingerTable.get(1).node = new BigInteger(res.split(" ")[0]);
 		parameters.fingerTable.get(1).port= Integer.parseInt(res.split(" ")[1]);
+		parameters.succ = parameters.fingerTable.get(1).node;
+		parameters.succPort = parameters.fingerTable.get(1).port;
 		
 		for(int i=0;i<Vars.m;i++){
 			if(Vars.isInRange(true,false,parameters.nodeName, parameters.fingerTable.get(i).node,parameters.fingerTable.get(i+1).intervalStart)){
@@ -145,14 +172,45 @@ public class ClientHandler extends Thread{
 	}
 	
 	
-	public void notifyAl(){
+	public void notifyPeers(){
 		OurRMI ourRMI;
-		String res;
+		String res, res1;
+		BigInteger nodeDiff;
+		
 		for(int i=0;i<Vars.m;i++){
 			res=findPredecessor(parameters.nodeName.subtract(new BigInteger("2").pow(i)));
+			if(parameters.nodeName.subtract(new BigInteger(res.split(" ")[0])).compareTo(BigInteger.ZERO) < 0) {
+				// if n - p < 0 then nodeDiff = (n-p +m) %m
+				nodeDiff = parameters.nodeName.subtract(new BigInteger(res.split(" ")[0])).add(new BigInteger(String.valueOf(Vars.m))).mod(new BigInteger(String.valueOf(Vars.m)));
+			} else {
+				nodeDiff = parameters.nodeName.subtract(new BigInteger(res.split(" ")[0]));
+			}
+			
+			ourRMI=new OurRMI(Integer.valueOf(res.split(" ")[1]),"getIthFinger:"+i+": "+": "+": ");
+			res1 = ourRMI.result();
+			if(nodeDiff.compareTo(new BigInteger("2").pow(i)) < 0 || 
+					!Vars.isInRange(false, false, parameters.nodeName, new BigInteger(res.split(" ")[0]), new BigInteger(res1.split(" ")[0]))) {
+						continue;
+			}
+			
+			ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]),"updateFingerTable:"+parameters.nodeName+":"+parameters.port+":"+i+": ");
 		}
 	}
 	
+	public void updateFingerTable(BigInteger nodeName, int port, int i) {
+		OurRMI ourRMI;
+		if(Vars.isInRange(true, false, parameters.nodeName, parameters.fingerTable.get(i).node, nodeName)) {
+			parameters.fingerTable.get(i).node = nodeName;
+			parameters.fingerTable.get(i).port = port;
+			
+			ourRMI=new OurRMI(parameters.predPort,"updateFingerTable:"+nodeName+":"+port+":"+i+": ");
+			ourRMI.result();
+		}
+		
+	}
 	
-	
+	//Send ith node and port
+	public String getIthFinger(int i) {
+		return parameters.fingerTable.get(i).node.toString() + " " + String.valueOf(parameters.fingerTable.get(i).port);
+	}
 }

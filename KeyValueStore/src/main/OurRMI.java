@@ -20,6 +20,8 @@ DataInputStream in;
 
 	public OurRMI(int port,String arguments){
 
+			this.port=port;
+			this.arguments=arguments;
 		try {
 		     client=new Socket("localhost",port);
 			 outToServer = client.getOutputStream();
@@ -50,6 +52,8 @@ DataInputStream in;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		if(res.equals(""))
+			return arguments.split(" ")[0];
 		return res;
 	}
 
