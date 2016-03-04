@@ -3,11 +3,12 @@ package main;
 import java.math.BigInteger;
 
 public class Vars {
-	static int m=40;
+	static int m=3;
 	static boolean isInRange(boolean leftInclude,boolean rightInclude,BigInteger left,BigInteger right,BigInteger id){
 		
-		if(left.compareTo(right)>=0){
-			return isInRange(leftInclude,true,left,new BigInteger("2").pow(Vars.m).subtract(new BigInteger("1")),id) || 
+	//	System.out.println(leftInclude+" "+rightInclude+" "+left +" "+right+" "+id);
+		if(left.compareTo(right)>=0){ 
+			return isInRange(leftInclude,false,left,new BigInteger("2").pow(Vars.m),id) || 
 					isInRange(true,rightInclude,(new BigInteger("0")),right,id);
 		}
 		

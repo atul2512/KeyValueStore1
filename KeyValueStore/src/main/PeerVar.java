@@ -19,6 +19,14 @@ public class PeerVar {
 		this.filePath=filePath;
 		fingerTable=new ArrayList<Successor>();
 		nodeName=ShaGen.shaGenerator("127.0.0.1:"+port);
+		System.out.println("Hash for port "+port+" "+nodeName);
+		
+		for(int i=0;i<Vars.m;i++){
+			Successor temp=new Successor(new BigInteger("2").pow(i).add(this.nodeName).mod(new BigInteger("2").pow(Vars.m)),
+					new BigInteger("2").pow(i+1).add(this.nodeName).mod(new BigInteger("2").pow(Vars.m)),this.nodeName,this.port);
+			fingerTable.add(temp);
+		}
+		
 	}
 	
 }

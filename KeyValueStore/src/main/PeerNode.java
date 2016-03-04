@@ -28,11 +28,11 @@ public class PeerNode {
 
 	public void ServerThread() throws IOException{
 		ServerSocket s = new ServerSocket(parameters.port);
-    	System.out.println("Server socket created at port "+parameters.port+" and waiting....");
+    //	System.out.println("Server socket created at port "+parameters.port+" and waiting....");
         while(true)
         {  	
         	Socket conn = s.accept();
-        	System.out.println("Connection received from: " + conn.getInetAddress().getHostName() + " : " + conn.getPort());
+      //  	System.out.println("Connection received from: " + conn.getInetAddress().getHostName() + " : " + conn.getPort());
         	new ClientHandler(conn,parameters.port,parameters).start();  
         }
 	}

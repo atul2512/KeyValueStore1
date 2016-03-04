@@ -48,10 +48,12 @@ DataInputStream in;
 		try {
 			out.writeUTF(arguments);
 			res=in.readUTF();
+			client.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		if(res.equals(""))
 			return arguments.split(" ")[0];
 		return res;
