@@ -337,11 +337,11 @@ public class ClientHandler extends Thread {
 			
 			if(nodeName.subtract(parameters.pred).compareTo(BigInteger.ZERO) < 0) { // if n - p < 0 then nodeDiff = (n-p +2^m) %2^m 
 				 nodeDiff = nodeName.subtract(parameters.pred).mod(new BigInteger("2").pow(Vars.m)); 
-			} 
+			 } 
 			else 
-			{ 
+			 { 
 				 nodeDiff = nodeName.subtract(parameters.pred); 
-		    }
+		     }
 			
 			System.out.println("Predecessor = " + parameters.pred + " nodeDiff = " + nodeDiff + " 2 ^ 1 = " + new BigInteger("2").pow(i));
 			ourRMI = new OurRMI(parameters.predPort, "getIthFinger:"+i+": "+": "+": ");

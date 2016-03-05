@@ -315,10 +315,13 @@ public class ClientHandler extends Thread {
 			 
 			 ourRMI=new OurRMI(Integer.valueOf(res.split(" ")[1]),"getIthFinger:"+i+": "+": "+": "); 
 			 res1 = ourRMI.result();
-			 if(nodeDiff.compareTo(new BigInteger("2").pow(i)) >= 0 && new BigInteger(res1.split(" ")[0]).compareTo(parameters.succ) == 0) {
-				 ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]),"updateFingerTable:"+parameters.nodeName+":"+parameters.port + ":" + i + ": "); 
-				 ourRMI.result();
-			 } 
+			 if(nodeDiff.compareTo(new BigInteger("2").pow(i)) < 0) {// ||
+					 //!Vars.isInRange(false, false, parameters.nodeName, new BigInteger(res.split(" ")[0]), new BigInteger(res1.split(" ")[0]))) {
+				 continue; 
+		     }
+			 
+			 ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]),"updateFingerTable:"+parameters.nodeName+":"+parameters.port + ":" + i + ": "); 
+			 ourRMI.result(); 
 		}
 
 	}
@@ -328,8 +331,7 @@ public class ClientHandler extends Thread {
 		
 		OurRMI ourRMI;
 		BigInteger nodeDiff;
-		String res, res1;
-		
+	
 		if (Vars.isInRange(true, false, parameters.nodeName, parameters.fingerTable.get(i).node, nodeName)) {
 			 System.out.println("updatefingertable with nodeName:"+nodeName+" with in port "+port+" with i:"+i);
 			parameters.fingerTable.get(i).node = nodeName;
@@ -337,24 +339,19 @@ public class ClientHandler extends Thread {
 			
 			if(nodeName.subtract(parameters.pred).compareTo(BigInteger.ZERO) < 0) { // if n - p < 0 then nodeDiff = (n-p +2^m) %2^m 
 				 nodeDiff = nodeName.subtract(parameters.pred).mod(new BigInteger("2").pow(Vars.m)); 
-			} 
+			 } 
 			else 
-			{ 
+			 { 
 				 nodeDiff = nodeName.subtract(parameters.pred); 
-		    }
+		     }
 			
 			System.out.println("Predecessor = " + parameters.pred + " nodeDiff = " + nodeDiff + " 2 ^ 1 = " + new BigInteger("2").pow(i));
-			ourRMI = new OurRMI(parameters.predPort, "getIthFinger:"+i+": "+": "+": ");
-			res = ourRMI.result();
-			
-			ourRMI = new OurRMI(port, "getSuccessor:" + ": " + ": " + ": " + ": ");
-			res1 = ourRMI.result();
-			
-			if(nodeDiff.compareTo(new BigInteger("2").pow(i)) >= 0 &&  new BigInteger(res.split(" ")[0]).compareTo(new BigInteger(res1.split(" ")[0])) == 0) {
-				ourRMI = new OurRMI(parameters.predPort, "updateFingerTable:" + nodeName + ":" + port + ":" + i + ": ");
-				ourRMI.result(); 
-			}
-			
+			if(nodeDiff.compareTo(new BigInteger("2").pow(i)) < 0) {// ||
+				 //!Vars.isInRange(false, false, parameters.nodeName, new BigInteger(res.split(" ")[0]), new BigInteger(res1.split(" ")[0]))) {
+				return nodeName.toString(); 
+	     }
+			ourRMI = new OurRMI(parameters.predPort, "updateFingerTable:" + nodeName + ":" + port + ":" + i + ": ");
+			ourRMI.result();
 		}
 		return nodeName.toString();
 	}
