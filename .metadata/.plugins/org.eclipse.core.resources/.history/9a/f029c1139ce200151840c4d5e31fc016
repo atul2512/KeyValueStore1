@@ -264,13 +264,6 @@ public class ClientHandler extends Thread {
 		parameters.succPort = parameters.fingerTable.get(0).port;
 		
 		
-		
-		//--- new
-//		
-//		OurRMI ourRMI1 = new OurRMI(parameters.succPort, "setPredecessor:" + parameters.nodeName+":"+ parameters.port+": " + ": " + ": ");
-//		ourRMI1.result();
-//		
-		//----new
 	
 		ourRMI = new OurRMI(parameters.succPort,
 				"getPredecessor:"  + ": " + ": " + ": ");
@@ -289,13 +282,6 @@ public class ClientHandler extends Thread {
 						"findSuccessor:" + parameters.fingerTable.get(i+1).intervalStart.toString() + ": " + ": " + ": ");
 				res = ourRMI.result();
 				System.out.println("result is:" + res);
-				
-				//---new
-				if(Vars.isInRange(false, false, parameters.fingerTable.get(i+1).intervalStart, new BigInteger(res.split(" ")[0]), parameters.nodeName)){
-					res=parameters.nodeName.toString() + " "+String.valueOf(parameters.port);
-				}
-				//----new
-				
 				parameters.fingerTable.get(i + 1).node = new BigInteger(res.split(" ")[0]);
 				parameters.fingerTable.get(i + 1).port = Integer.parseInt(res.split(" ")[1]);
 			}

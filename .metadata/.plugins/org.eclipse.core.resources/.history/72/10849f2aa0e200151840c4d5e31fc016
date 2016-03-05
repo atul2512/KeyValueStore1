@@ -3,7 +3,7 @@ package main;
 import java.math.BigInteger;
 
 public class Vars {
-	static int m=10;
+	static int m=3;
 	static boolean isInRange(boolean leftInclude,boolean rightInclude,BigInteger left,BigInteger right,BigInteger id){
 		
 	//	System.out.println(leftInclude+" "+rightInclude+" "+left +" "+right+" "+id);

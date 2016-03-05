@@ -289,7 +289,6 @@ public class ClientHandler extends Thread {
 						"findSuccessor:" + parameters.fingerTable.get(i+1).intervalStart.toString() + ": " + ": " + ": ");
 				res = ourRMI.result();
 				System.out.println("result is:" + res);
-				
 				//---new
 				if(Vars.isInRange(false, false, parameters.fingerTable.get(i+1).intervalStart, new BigInteger(res.split(" ")[0]), parameters.nodeName)){
 					res=parameters.nodeName.toString() + " "+String.valueOf(parameters.port);
