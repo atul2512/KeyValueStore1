@@ -1,0 +1,24 @@
+package main;
+
+import java.math.BigInteger;
+import java.util.LinkedHashMap;
+import java.util.*;
+
+public class PeerVar {
+
+	String filePath="";
+	int port;
+	List<Successor> fingerTable;
+	BigInteger nodeName;
+//	PeerNode Successor,Predecessor;
+	BigInteger succ,pred;
+	int succPort,predPort;
+	
+	PeerVar(int port,String filePath){
+		this.port=port;
+		this.filePath=filePath;
+		fingerTable=new ArrayList<Successor>();
+		nodeName=ShaGen.shaGenerator("127.0.0.1:"+port);
+	}
+	
+}

@@ -55,6 +55,12 @@ public class ClientHandler extends Thread {
 			case "getSuccessor":
 				out.writeUTF(getSuccessor());
 				break;
+			case "setPredecessor":
+				out.writeUTF(setPredecessor(new BigInteger(arguments[1]), Integer.parseInt(arguments[2])));
+				break;
+			case "setSuccessor":
+				out.writeUTF(setSuccessor(new BigInteger(arguments[1]), Integer.parseInt(arguments[2])));
+				break;
 			case "updateFingerTable":
 				out.writeUTF(updateFingerTable(new BigInteger(arguments[1]), Integer.parseInt(arguments[2]),
 						Integer.parseInt(arguments[3])));
@@ -86,13 +92,11 @@ public class ClientHandler extends Thread {
 	public String closestPrecedingFinger(BigInteger id) {
 		System.out.println("called closestPrecedingFinger with argument: " + id + " with in port " + parameters.port);
 		for (int i = Vars.m - 1; i >= 0; i--) {
-			// System.out.println("called closestPrecedingFinger and returning:
-			// "+
-			// parameters.fingerTable.get(i).node.toString()+" "+
-			// String.valueOf(parameters.fingerTable.get(i).port));
-
 			if (Vars.isInRange(false, false, parameters.nodeName, id, parameters.fingerTable.get(i).node)) {
-
+				
+				System.out.println("closestPrecedingFinger returning: " + parameters.fingerTable.get(i).node.toString() + " "
+						+ String.valueOf(parameters.fingerTable.get(i).port));
+				
 				return parameters.fingerTable.get(i).node.toString() + " "
 						+ String.valueOf(parameters.fingerTable.get(i).port);
 			}
@@ -134,10 +138,12 @@ public class ClientHandler extends Thread {
 			}
 			nodePrime = new BigInteger(temp.split(" ")[0]);
 			resultPort = temp.split(" ")[1];
+			System.out.println("new nodePrime : " + nodePrime + " " + resultPort);
 			if (nodePrime.compareTo(parameters.nodeName) != 0) {
 				ourRMI = new OurRMI(Integer.parseInt(temp.split(" ")[1]),
 						"getSuccessor:" + ": " + ": " + ": " + ": ");
 				nodePrimeSucc = new BigInteger(ourRMI.result().split(" ")[0]);
+				System.out.println("new nodePrime successor : " + nodePrimeSucc);
 			} else
 				break;
 		}
@@ -147,6 +153,7 @@ public class ClientHandler extends Thread {
 	public String findSuccessor(BigInteger id) {
 
 		System.out.println("Inside the find successor with id:" + id + " with in port " + parameters.port);
+		
 
 		OurRMI ourRMI = new OurRMI(Integer.parseInt(findPredecessor(id).split(" ")[1]),
 				"getSuccessor:" + ": " + ": " + ": " + ": ");
@@ -179,9 +186,11 @@ public class ClientHandler extends Thread {
 		System.out.println("INIT FINGER TABLE DONE:");
 		printFingerTable();
 
-		notifyPeers();
+		notifyPeers(friend);
 		System.out.println("Notify done:");
+	
 		
+		/*	
 		OurRMI ourRMI = new OurRMI(parameters.succPort, "getPredecessor:" + ": " + ": " + ": " + ": ");
 		String res = ourRMI.result();
 
@@ -189,8 +198,16 @@ public class ClientHandler extends Thread {
 		parameters.predPort = Integer.parseInt(res.split(" ")[1]);
 		//FIX: set pred.succ and succ.pred for current node
 		
+	*/	
+		OurRMI ourRMI = new OurRMI(parameters.succPort, "setPredecessor:" + parameters.nodeName+":"+ parameters.port+": " + ": " + ": ");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(parameters.predPort, "setSuccessor:" + parameters.nodeName+":"+ parameters.port+": " + ": " + ": ");
+		ourRMI.result();
+		
+		
 		System.out.print("Success in join for "+parameters.port);
-		ourRMI = new OurRMI(5710,
+		 ourRMI = new OurRMI(5710,
 				"printFingerTable:" + ": " + ": " + ": " + ": ");
 		ourRMI.result();
 		return "success in join";
@@ -199,7 +216,29 @@ public class ClientHandler extends Thread {
 	
 
 	}
+	
+	
+	public String setPredecessor(BigInteger node,int port){
+		System.out.println("Inside the set pred with in port " + parameters.port);
 
+		
+		parameters.pred=node;
+		parameters.predPort=port;
+		
+		
+		return "success";
+	}
+
+	public String setSuccessor(BigInteger node,int port) {
+		System.out.println("Inside the set successor with in port " + parameters.port);
+
+		
+		parameters.succ=node;
+		parameters.succPort=port;
+		
+		return "success";
+	}
+	
 	public String getPredecessor() {
 		System.out.println("Inside the get pred with in port " + parameters.port);
 
@@ -223,6 +262,14 @@ public class ClientHandler extends Thread {
 		parameters.fingerTable.get(0).port = Integer.parseInt(res.split(" ")[1]);
 		parameters.succ = parameters.fingerTable.get(0).node;
 		parameters.succPort = parameters.fingerTable.get(0).port;
+		
+		
+	
+		ourRMI = new OurRMI(parameters.succPort,
+				"getPredecessor:"  + ": " + ": " + ": ");
+		String temp=ourRMI.result();
+		parameters.pred=new BigInteger(temp.split(" ")[0]);
+		parameters.predPort = Integer.parseInt(temp.split(" ")[1]);
 
 		for (int i = 0; i < Vars.m - 1; i++) {
 			if (Vars.isInRange(true, false, parameters.nodeName, parameters.fingerTable.get(i).node,
@@ -232,7 +279,7 @@ public class ClientHandler extends Thread {
 				parameters.fingerTable.get(i + 1).port = parameters.fingerTable.get(i).port;
 			} else {
 				ourRMI = new OurRMI(port,
-						"findSuccessor:" + parameters.fingerTable.get(1).intervalStart.toString() + ": " + ": " + ": ");
+						"findSuccessor:" + parameters.fingerTable.get(i+1).intervalStart.toString() + ": " + ": " + ": ");
 				res = ourRMI.result();
 				System.out.println("result is:" + res);
 				parameters.fingerTable.get(i + 1).node = new BigInteger(res.split(" ")[0]);
@@ -241,16 +288,24 @@ public class ClientHandler extends Thread {
 		}
 	}
 
-	public void notifyPeers() {
+	
+	public void notifyPeers(int friend) {
 		OurRMI ourRMI;
 		String res, res1;
 		BigInteger nodeDiff;
 		
 		for(int i=0;i<Vars.m;i++){
-			 res=findPredecessor(parameters.nodeName.subtract(new BigInteger("2").pow(i)).mod(new BigInteger("2").pow(Vars.m)));
+		//	ourRMI=new OurRMI(friend,"findPredecessor" + ":"+parameters.nodeName.subtract(new BigInteger("2").pow(i)).mod(new BigInteger("2").pow(Vars.m)) + ": " + ": " + ": ");
+		//	res=ourRMI.result();
+			res=findPredecessor(parameters.nodeName.subtract(new BigInteger("2").pow(i)).mod(new BigInteger("2").pow(Vars.m)));
 			 System.out.println("Predecessor is "+res);
+			 
+			 if(new BigInteger(res.split(" ")[0]).compareTo(parameters.nodeName)==0){
+				 res=parameters.pred.toString()+" "+String.valueOf(parameters.predPort);
+			 }
+			 
 			 if(parameters.nodeName.subtract(new BigInteger(res.split(" ")[0])).compareTo(BigInteger.ZERO) < 0) { // if n - p < 0 then nodeDiff = (n-p +2^m) %2^m 
-				 nodeDiff = parameters.nodeName.subtract(new BigInteger(res.split(" ")[0])).add(new BigInteger("2").pow(Vars.m)).mod(new BigInteger("2").pow(Vars.m)); 
+				 nodeDiff = parameters.nodeName.subtract(new BigInteger(res.split(" ")[0])).mod(new BigInteger("2").pow(Vars.m)); 
 			 } 
 			 
 			 else 
@@ -260,7 +315,7 @@ public class ClientHandler extends Thread {
 			 
 			 ourRMI=new OurRMI(Integer.valueOf(res.split(" ")[1]),"getIthFinger:"+i+": "+": "+": "); 
 			 res1 = ourRMI.result();
-			 if(nodeDiff.compareTo(new BigInteger("2").pow(i)) < 0){// ||
+			 if(nodeDiff.compareTo(new BigInteger("2").pow(i)) < 0) {// ||
 					 //!Vars.isInRange(false, false, parameters.nodeName, new BigInteger(res.split(" ")[0]), new BigInteger(res1.split(" ")[0]))) {
 				 continue; 
 		     }
@@ -269,33 +324,47 @@ public class ClientHandler extends Thread {
 			 ourRMI.result(); 
 		}
 
-
-//		for (int i = 0; i < Vars.m; i++) {
-//			res = findPredecessor(
-//					parameters.nodeName.subtract(new BigInteger("2").pow(i)).mod(new BigInteger("2").pow(Vars.m)));
-//			ourRMI = new OurRMI(Integer.parseInt(res.split(" ")[1]),
-//					"updateFingerTable:" + parameters.nodeName + ":" + parameters.port + ":" + i + ": ");
-//			ourRMI.result();
-//		}
-
 	}
 
 	public String updateFingerTable(BigInteger nodeName, int port, int i) {
-		// System.out.println("Inside the updatefingertable with
-		// nodeName:"+nodeName+" with in port "+port+" with i:"+i);
+		System.out.println("Inside updatefingertable with in port "+parameters.port);
+		
 		OurRMI ourRMI;
+		BigInteger nodeDiff;
+	
 		if (Vars.isInRange(true, false, parameters.nodeName, parameters.fingerTable.get(i).node, nodeName)) {
+			 System.out.println("updatefingertable with nodeName:"+nodeName+" with in port "+port+" with i:"+i);
 			parameters.fingerTable.get(i).node = nodeName;
 			parameters.fingerTable.get(i).port = port;
-
+			
+			if(nodeName.subtract(parameters.pred).compareTo(BigInteger.ZERO) < 0) { // if n - p < 0 then nodeDiff = (n-p +2^m) %2^m 
+				 nodeDiff = nodeName.subtract(parameters.pred).mod(new BigInteger("2").pow(Vars.m)); 
+			 } 
+			else 
+			 { 
+				 nodeDiff = nodeName.subtract(parameters.pred); 
+		     }
+			
+			System.out.println("Predecessor = " + parameters.pred + " nodeDiff = " + nodeDiff + " 2 ^ 1 = " + new BigInteger("2").pow(i));
+			if(nodeDiff.compareTo(new BigInteger("2").pow(i)) < 0) {// ||
+				 //!Vars.isInRange(false, false, parameters.nodeName, new BigInteger(res.split(" ")[0]), new BigInteger(res1.split(" ")[0]))) {
+				return nodeName.toString(); 
+	     }
 			ourRMI = new OurRMI(parameters.predPort, "updateFingerTable:" + nodeName + ":" + port + ":" + i + ": ");
 			ourRMI.result();
 		}
-	return nodeName.toString();
+		return nodeName.toString();
 	}
 
 	// Send ith node and port
 	public String getIthFinger(int i) {
 		return parameters.fingerTable.get(i).node.toString() + " " + String.valueOf(parameters.fingerTable.get(i).port);
 	}
+	
+	
+	public void PrintAll(int count){
+		
+	}
+	
+	
 }

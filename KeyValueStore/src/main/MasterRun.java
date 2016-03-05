@@ -8,7 +8,8 @@ public class MasterRun {
 	public static void main(String[] args) throws UnknownHostException, IOException{
 		PeerNode p1=new PeerNode(5710,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5678.txt");
 		PeerNode p2=new PeerNode(5711,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5679.txt");
-	//	PeerNode p3=new PeerNode(5681,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5680.txt");
+		PeerNode p3=new PeerNode(5712,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5680.txt");
+		PeerNode p4=new PeerNode(5713,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5680.txt");
 		
 		
 		OurRMI ourRMI = new OurRMI(5710, "join"+":5623"+":"+":");
@@ -16,6 +17,56 @@ public class MasterRun {
 		
 		ourRMI = new OurRMI(5711, "join"+":5710"+":"+":");
 		ourRMI.result();
+  		
+		ourRMI = new OurRMI(5712, "join"+":5710"+":"+":");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(5713, "join"+":5710"+":"+":");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(5710, "printFingerTable"+":5710"+":"+":");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(5711, "printFingerTable"+":5710"+":"+":");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(5712, "printFingerTable"+":5710"+":"+":");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(5710, "getSuccessor"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5711, "getSuccessor"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5712, "getSuccessor"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5713, "getSuccessor"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5710, "getPredecessor"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5711, "getPredecessor"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5712, "getPredecessor"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5713, "getPredecessor"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		
+		
+		
+		
+	/*	
+		ourRMI = new OurRMI(5713, "join"+":5710"+":"+":");
+		ourRMI.result();
+	*/	
+		
+		
 	//	p1.asClient("localhost", 5679);
 	//	p2.asClient("localhost", 5680);
 	//	p3.asClient("localhost", 5678);
