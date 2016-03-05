@@ -308,7 +308,7 @@ public class ClientHandler extends Thread {
 			 
 			 ourRMI=new OurRMI(Integer.valueOf(res.split(" ")[1]),"getIthFinger:"+i+": "+": "+": "); 
 			 res1 = ourRMI.result();
-			 if(nodeDiff.compareTo(new BigInteger("2").pow(i)) >= 0){ //&& new BigInteger(res1.split(" ")[0]).compareTo(parameters.succ) == 0) {
+			 if(nodeDiff.compareTo(new BigInteger("2").pow(i)) >= 0 && new BigInteger(res1.split(" ")[0]).compareTo(parameters.succ) == 0) {
 				 ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]),"updateFingerTable:"+parameters.nodeName+":"+parameters.port + ":" + i + ": "); 
 				 ourRMI.result();
 			 } 
@@ -345,16 +345,9 @@ public class ClientHandler extends Thread {
 		}
 		else {
 			if(Vars.isInRange(false, false, parameters.nodeName, nodeName, parameters.succ)) {
-				nodeDiff = nodeName.subtract(parameters.succ).mod(new BigInteger("2").pow(Vars.m)); 
-				ourRMI = new OurRMI(parameters.succPort, "getIthFinger:"+i+": "+": "+": ");
-				res = ourRMI.result();
+				 nodeDiff = nodeName.subtract(parameters.succ).mod(new BigInteger("2").pow(Vars.m)); 
 				
-				ourRMI = new OurRMI(port, "getSuccessor:" + ": " + ": " + ": " + ": ");
-				res1 = ourRMI.result();
-				if(nodeDiff.compareTo(new BigInteger("2").pow(i)) >= 0 &&  new BigInteger(res.split(" ")[0]).compareTo(new BigInteger(res1.split(" ")[0])) == 0) {
-					ourRMI = new OurRMI(parameters.succPort, "updateFingerTable:" + nodeName + ":" + port + ":" + i + ": ");
-					ourRMI.result(); 
-				}
+				
 			}
 		}
 		return nodeName.toString();

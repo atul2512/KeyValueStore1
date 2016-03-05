@@ -308,7 +308,7 @@ public class ClientHandler extends Thread {
 			 
 			 ourRMI=new OurRMI(Integer.valueOf(res.split(" ")[1]),"getIthFinger:"+i+": "+": "+": "); 
 			 res1 = ourRMI.result();
-			 if(nodeDiff.compareTo(new BigInteger("2").pow(i)) >= 0){ //&& new BigInteger(res1.split(" ")[0]).compareTo(parameters.succ) == 0) {
+			 if(nodeDiff.compareTo(new BigInteger("2").pow(i)) >= 0 && new BigInteger(res1.split(" ")[0]).compareTo(parameters.succ) == 0) {
 				 ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]),"updateFingerTable:"+parameters.nodeName+":"+parameters.port + ":" + i + ": "); 
 				 ourRMI.result();
 			 } 

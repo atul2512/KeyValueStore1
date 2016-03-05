@@ -39,7 +39,7 @@ public class masth {
 		// TODO Auto-generated method stub
 		
 		
-		System.out.println (new BigInteger("-2").mod(new BigInteger("8")));
+		System.out.println((-2)%8);
 		//System.out.println(masth.isInRange(false, false, new BigInteger("2"),  new BigInteger("0") ,  new BigInteger("2")));
 		
 	}

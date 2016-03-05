@@ -25,9 +25,6 @@ public class MasterRun {
 		ourRMI = new OurRMI(5713, "join"+":5710"+":"+":");
 		ourRMI.result();
 		
-		ourRMI = new OurRMI(5714, "join"+":5710"+":"+":");
-		ourRMI.result();
-		
 		ourRMI = new OurRMI(5710, "printFingerTable"+":5710"+":"+":");
 		ourRMI.result();
 		
@@ -35,9 +32,6 @@ public class MasterRun {
 		ourRMI.result();
 		
 		ourRMI = new OurRMI(5712, "printFingerTable"+":5710"+":"+":");
-		ourRMI.result();
-		
-		ourRMI = new OurRMI(5713, "printFingerTable"+":5710"+":"+":");
 		ourRMI.result();
 		
 		ourRMI = new OurRMI(5710, "getSuccessor"+":"+":"+":");
@@ -52,9 +46,6 @@ public class MasterRun {
 		ourRMI = new OurRMI(5713, "getSuccessor"+":"+":"+":");
 		System.out.println(ourRMI.result());
 		
-		ourRMI = new OurRMI(5714, "getSuccessor"+":"+":"+":");
-		System.out.println(ourRMI.result());
-		
 		ourRMI = new OurRMI(5710, "getPredecessor"+":"+":"+":");
 		System.out.println(ourRMI.result());
 		
@@ -67,8 +58,6 @@ public class MasterRun {
 		ourRMI = new OurRMI(5713, "getPredecessor"+":"+":"+":");
 		System.out.println(ourRMI.result());
 		
-		ourRMI = new OurRMI(5714, "getPredecessor"+":"+":"+":");
-		System.out.println(ourRMI.result());
 		
 		
 		
