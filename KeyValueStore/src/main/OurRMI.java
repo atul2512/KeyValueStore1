@@ -58,8 +58,29 @@ DataInputStream in;
 			return arguments.split(" ")[0];
 		return res;
 	}
-
 	
+	public String result1(boolean send){
+		String res="";
+		try {
+			if(send)
+				out.writeUTF(arguments);
+			res=in.readUTF();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return res;
+	}
+	
+	public void closeSocket(){
+		try {
+			client.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 
 
 

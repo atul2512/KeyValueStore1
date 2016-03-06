@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 public class MasterRun {
 	
 	public static void main(String[] args) throws UnknownHostException, IOException{
+	
 		PeerNode p1=new PeerNode(5710,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5678.txt");
 		PeerNode p2=new PeerNode(5711,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5679.txt");
 		PeerNode p3=new PeerNode(5712,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5680.txt");
@@ -22,11 +23,11 @@ public class MasterRun {
 		ourRMI = new OurRMI(5712, "join"+":5710"+":"+":");
 		ourRMI.result();
 		
-		ourRMI = new OurRMI(5713, "join"+":5710"+":"+":");
-		ourRMI.result();
-		
-		ourRMI = new OurRMI(5714, "join"+":5710"+":"+":");
-		ourRMI.result();
+//		ourRMI = new OurRMI(5713, "join"+":5710"+":"+":");
+//		ourRMI.result();
+//		
+//		ourRMI = new OurRMI(5714, "join"+":5710"+":"+":");
+//		ourRMI.result();
 		
 		ourRMI = new OurRMI(5710, "printFingerTable"+":5710"+":"+":");
 		ourRMI.result();
@@ -34,11 +35,11 @@ public class MasterRun {
 		ourRMI = new OurRMI(5711, "printFingerTable"+":5710"+":"+":");
 		ourRMI.result();
 		
-		ourRMI = new OurRMI(5712, "printFingerTable"+":5710"+":"+":");
-		ourRMI.result();
-		
-		ourRMI = new OurRMI(5713, "printFingerTable"+":5710"+":"+":");
-		ourRMI.result();
+//		ourRMI = new OurRMI(5712, "printFingerTable"+":5710"+":"+":");
+//		ourRMI.result();
+//		
+//		ourRMI = new OurRMI(5713, "printFingerTable"+":5710"+":"+":");
+//		ourRMI.result();
 		
 		ourRMI = new OurRMI(5710, "getSuccessor"+":"+":"+":");
 		System.out.println(ourRMI.result());
@@ -49,11 +50,11 @@ public class MasterRun {
 		ourRMI = new OurRMI(5712, "getSuccessor"+":"+":"+":");
 		System.out.println(ourRMI.result());
 		
-		ourRMI = new OurRMI(5713, "getSuccessor"+":"+":"+":");
-		System.out.println(ourRMI.result());
-		
-		ourRMI = new OurRMI(5714, "getSuccessor"+":"+":"+":");
-		System.out.println(ourRMI.result());
+//		ourRMI = new OurRMI(5713, "getSuccessor"+":"+":"+":");
+//		System.out.println(ourRMI.result());
+//		
+//		ourRMI = new OurRMI(5714, "getSuccessor"+":"+":"+":");
+//		System.out.println(ourRMI.result());
 		
 		ourRMI = new OurRMI(5710, "getPredecessor"+":"+":"+":");
 		System.out.println(ourRMI.result());
@@ -64,14 +65,46 @@ public class MasterRun {
 		ourRMI = new OurRMI(5712, "getPredecessor"+":"+":"+":");
 		System.out.println(ourRMI.result());
 		
+//		ourRMI = new OurRMI(5713, "getPredecessor"+":"+":"+":");
+//		System.out.println(ourRMI.result());
+//		
+//		ourRMI = new OurRMI(5714, "getPredecessor"+":"+":"+":");
+//		System.out.println(ourRMI.result());
+		
+		String key1="Hello";
+		String value="https://www.youtube.com/watch?v=YQHsXMglC9A";
+		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" "+value+" "+"insert");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" deadbeef"+" "+"retrieve");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5713, "join"+":5710"+":"+":");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(5714, "join"+":5710"+":"+":");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(5712, "printFingerTable"+":5710"+":"+":");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(5713, "printFingerTable"+":5710"+":"+":");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(5713, "getSuccessor"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5714, "getSuccessor"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
 		ourRMI = new OurRMI(5713, "getPredecessor"+":"+":"+":");
 		System.out.println(ourRMI.result());
 		
 		ourRMI = new OurRMI(5714, "getPredecessor"+":"+":"+":");
 		System.out.println(ourRMI.result());
 		
-		
-		
+		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" deadbeef"+" "+"retrieve");
+		System.out.println(ourRMI.result());
 		
 	/*	
 		ourRMI = new OurRMI(5713, "join"+":5710"+":"+":");

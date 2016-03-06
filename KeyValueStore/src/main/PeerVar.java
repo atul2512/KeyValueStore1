@@ -14,6 +14,12 @@ public class PeerVar {
 	BigInteger succ,pred;
 	int succPort,predPort;
 	
+	
+	HashMap<BigInteger,String> keyValue;
+	
+	
+	
+	
 	PeerVar(int port,String filePath){
 		this.port=port;
 		this.filePath=filePath;
@@ -26,6 +32,9 @@ public class PeerVar {
 					new BigInteger("2").pow(i+1).add(this.nodeName).mod(new BigInteger("2").pow(Vars.m)),this.nodeName,this.port);
 			fingerTable.add(temp);
 		}
+		
+		
+		keyValue= new HashMap<BigInteger,String>();
 		
 	}
 	

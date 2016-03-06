@@ -52,28 +52,7 @@ public class PeerNode {
         client.close();
 	}
 	
-	/*
-	public BigInteger findSuccessor(BigInteger ){
-		
-	} */
-	
-	/*
-	public void join(PeerNode coord){
-		try {
-		Socket  client=new Socket("localhost",port);
-		
-	     
-	//	     System.out.println("Server says " + in.readUTF());
-		
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	} */
+
 	
 	
 	

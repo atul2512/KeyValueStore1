@@ -10,6 +10,7 @@ public class ClientHandler extends Thread {
 	Socket server;
 	// int port;
 	PeerVar parameters;
+	
 
 	// Map<BigInteger,Successor> fingerTable;
 	ClientHandler(Socket conn, int port, PeerVar parameters) {
@@ -22,18 +23,14 @@ public class ClientHandler extends Thread {
 		// System.out.println("Just connected to "
 		// + server.getRemoteSocketAddress());
 		DataInputStream in = null;
+		DataOutputStream out = null;
 		try {
 			in = new DataInputStream(server.getInputStream());
 			String received = in.readUTF();
 			String[] arguments = received.split(":");
 			System.out.println("recevied msg: " + received);
 
-			/*
-			 * for(int i=0;i<arguments.length;i++){ System.out.println(
-			 * "argument "+i+" is :"+arguments[i]); }
-			 */
 
-			DataOutputStream out = null;
 			out = new DataOutputStream(server.getOutputStream());
 
 			switch (arguments[0]) {
@@ -71,6 +68,25 @@ public class ClientHandler extends Thread {
 			case "printFingerTable":
 				out.writeUTF(printFingerTable());
 				break;
+			case "findKeySuccessor":
+				arguments = received.split(" ");
+				out.writeUTF(findKeySuccessor(arguments[1],arguments[2],arguments[3]));
+				break;
+			case "keyInsert":
+				arguments = received.split(" ");
+				out.writeUTF(keyInsert(new BigInteger(arguments[1]),arguments[2]));
+				break;
+			case "keyRetrieve":
+				arguments = received.split(" ");
+				out.writeUTF(keyRetrieve(new BigInteger(arguments[1])));
+				break;
+			case "getKeyValues":
+				String ress=getKeyValues(out);
+				out.writeUTF(ress);
+				break;
+				
+				
+				
 			/*
 			 * case "moveKeys" : out.writeUTF(moveKeys(new
 			 * BigInteger(arguments[1])))); break;
@@ -210,6 +226,8 @@ public class ClientHandler extends Thread {
 		 ourRMI = new OurRMI(5710,
 				"printFingerTable:" + ": " + ": " + ": " + ": ");
 		ourRMI.result();
+		
+		moveKeys();
 		return "success in join";
 		// get successor S
 		// move the keys to n
@@ -379,9 +397,80 @@ public class ClientHandler extends Thread {
 		return parameters.fingerTable.get(i).node.toString() + " " + String.valueOf(parameters.fingerTable.get(i).port);
 	}
 	
-	
-	public void PrintAll(int count){
+	public String findKeySuccessor(String key,String value, String job){
+		BigInteger tempKey=ShaGen.shaGenerator(key);
+		System.out.println("tempKey:"+tempKey);
+		String res=findSuccessor(tempKey);
 		
+		if(res.split(" ")[0].compareTo(parameters.nodeName.toString())==0){
+			if(job.compareTo("insert") == 0) {
+				System.out.println("Calling key insert with in port :"+parameters.port);
+				keyInsert(tempKey,value);
+			}
+			else {
+				System.out.println("Calling key retrieve with in port: "+parameters.port);
+				return keyRetrieve(tempKey);
+			}
+		}
+		else{
+			if(job.equals("insert")) {
+				OurRMI ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]), "keyInsert: " + tempKey + " " + value );
+				ourRMI.result();
+			}
+			else {
+				OurRMI ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]), "keyRetrieve: " + tempKey);
+				return ourRMI.result();
+			}
+		}
+		
+		return "success";
+	}
+	
+	public String keyInsert(BigInteger key,String value){
+		System.out.println("Inside keyInsert with in port:"+parameters.port);
+		parameters.keyValue.put(key, value);
+		return "success Insert";
+	}
+	
+	public String keyRetrieve(BigInteger key){
+		System.out.println("Inside keyRetrieve with in port:"+parameters.port);
+		return parameters.keyValue.get(key);
+	}
+	
+	public String moveKeys() {
+		System.out.println("move keys in port:"+parameters.port);
+		String prevEntry = parameters.nodeName + " " + parameters.port;
+		OurRMI ourRMI;
+		ourRMI = new OurRMI(parameters.succPort, "getKeyValues:"+":"+":");
+		prevEntry = ourRMI.result1(true);
+		while(prevEntry.compareTo("end") != 0) {
+			System.out.println("Moving key " + new BigInteger(prevEntry.split(" ")[0]) + " to port " + parameters.port);
+			parameters.keyValue.put(new BigInteger(prevEntry.split(" ")[0]), prevEntry.split(" ")[1]);
+			prevEntry=ourRMI.result1(false);
+		}
+		ourRMI.closeSocket();
+		return "sucess move";
+	}
+	
+	public String getKeyValues(	DataOutputStream out){
+		
+		System.out.println("sending out: fuck "+parameters.port);
+		for(BigInteger key: parameters.keyValue.keySet()){
+			System.out.println("sending out: fuck1 "+key);
+			if(Vars.isInRange(true, false, key, parameters.nodeName, parameters.pred)){
+				try {
+					System.out.println("sending out:"+key);
+					out.writeUTF(key+" "+parameters.keyValue.get(key));
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				parameters.keyValue.remove(key);
+			}
+		}
+	
+		return "end";
 	}
 	
 	
