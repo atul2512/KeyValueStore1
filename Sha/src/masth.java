@@ -1,4 +1,5 @@
 import java.math.BigInteger;
+import java.util.HashMap;
 
 
 public class masth {
@@ -35,12 +36,26 @@ public class masth {
 			return false;
 		}
 	
+	
+	
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
 		
 		System.out.println (new BigInteger("-2").mod(new BigInteger("8")));
 		//System.out.println(masth.isInRange(false, false, new BigInteger("2"),  new BigInteger("0") ,  new BigInteger("2")));
+		
+		
+		HashMap<BigInteger,String> temp=new HashMap<BigInteger,String>();
+		
+		temp.put(new BigInteger("123123"), "sdfasdf");
+		temp.put(new BigInteger("5533"), "sdfasdf");
+		
+		temp.clear();
+		
+		System.out.println(temp);
+		
 		
 	}
 

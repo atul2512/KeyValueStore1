@@ -29,8 +29,7 @@ public class ClientHandler extends Thread {
 			String received = in.readUTF();
 			String[] arguments = received.split(":");
 			System.out.println("recevied msg: " + received);
-
-
+			
 			out = new DataOutputStream(server.getOutputStream());
 
 			switch (arguments[0]) {
@@ -74,7 +73,7 @@ public class ClientHandler extends Thread {
 				break;
 			case "keyInsert":
 				arguments = received.split(" ");
-				out.writeUTF(keyInsert(new BigInteger(arguments[1]),arguments[2]));
+				out.writeUTF(keyInsert(new BigInteger(arguments[1]),arguments[2], Integer.parseInt(arguments[3])));
 				break;
 			case "keyRetrieve":
 				arguments = received.split(" ");
@@ -84,8 +83,25 @@ public class ClientHandler extends Thread {
 				String ress=getKeyValues(out);
 				out.writeUTF(ress);
 				break;
-				
-				
+			case "updateMyReplica":
+				 out.writeUTF(updateMyReplica(arguments[1], Integer.parseInt(arguments[2])));
+				 break;
+			case "printReplicas":
+				 out.writeUTF(printReplicas());
+				 break;
+			case "printKeyValues":
+				 out.writeUTF(printKeyValues());
+				 break;
+			case "getKeyValuesPred":
+				 String res = getKeyValuesPred(out, Integer.parseInt(arguments[1]));
+				 out.writeUTF(res);
+				 break;
+			case "updateReplicaKeysForReplica2":
+				 out.writeUTF(updateReplicaKeysForReplica2());
+				 break;
+			case "clearReplica":
+				 out.writeUTF(clearReplica(Integer.parseInt(arguments[1])));
+				 break;
 				
 			/*
 			 * case "moveKeys" : out.writeUTF(moveKeys(new
@@ -198,13 +214,14 @@ public class ClientHandler extends Thread {
 		}
 
 		initFingerTable(friend);
-
 		System.out.println("INIT FINGER TABLE DONE:");
 		printFingerTable();
-
+		
 		notifyPeers(friend);
 		System.out.println("Notify done:");
 	
+		assignMyReplicas();
+		System.out.println("ASSIGNING MY REPLICAS DONE:");
 		
 		/*	
 		OurRMI ourRMI = new OurRMI(parameters.succPort, "getPredecessor:" + ": " + ": " + ": " + ": ");
@@ -226,6 +243,9 @@ public class ClientHandler extends Thread {
 		 ourRMI = new OurRMI(5710,
 				"printFingerTable:" + ": " + ": " + ": " + ": ");
 		ourRMI.result();
+		
+		
+		updateReplicas();
 		
 		moveKeys();
 		return "success in join";
@@ -340,7 +360,7 @@ public class ClientHandler extends Thread {
 			 
 			 ourRMI=new OurRMI(Integer.valueOf(res.split(" ")[1]),"getIthFinger:"+i+": "+": "+": "); 
 			 res1 = ourRMI.result();
-			 if(nodeDiff.compareTo(new BigInteger("2").pow(i)) >= 0){ //&& new BigInteger(res1.split(" ")[0]).compareTo(parameters.succ) == 0) {
+			 if(nodeDiff.compareTo(new BigInteger("2").pow(i)) >= 0) { //&& new BigInteger(res1.split(" ")[0]).compareTo(parameters.succ) == 0) {
 				 ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]),"updateFingerTable:"+parameters.nodeName+":"+parameters.port + ":" + i + ": "); 
 				 ourRMI.result();
 			 } 
@@ -397,15 +417,59 @@ public class ClientHandler extends Thread {
 		return parameters.fingerTable.get(i).node.toString() + " " + String.valueOf(parameters.fingerTable.get(i).port);
 	}
 	
+	public String assignMyReplicas() {
+		OurRMI ourRMI = new OurRMI(parameters.succPort, "getSuccessor:" + ": " + ": " + ": " + ": ");
+		String res = ourRMI.result();
+		
+		
+		parameters.myReplicas.set(0,parameters.succ.toString() +" "+ String.valueOf(parameters.succPort));
+		parameters.myReplicas.set(1,res);
+		
+		System.out.println("Tnside assignMyReplicas with in port "+ parameters.port+ " with my replicas " + parameters.succPort + "and "+ res);
+		return "success assign replica";
+	}
+	
+	public String updateReplicas() {
+		OurRMI ourRMI;
+		
+		ourRMI = new OurRMI(parameters.predPort, "getPredecessor:" + ":");
+		String res = ourRMI.result();
+		
+		ourRMI = new OurRMI(parameters.predPort, "updateMyReplica:"+parameters.nodeName + " " + parameters.port+ ":" + "0");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(parameters.predPort, "updateMyReplica:"+parameters.succ + " " + parameters.succPort+ ":" + "1");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(Integer.parseInt(res.split(" ")[1]), "updateMyReplica:"+parameters.nodeName + " " + parameters.port+ ":" + "1");
+		ourRMI.result();
+		
+		return "Sucess update replicas"; 
+	}
+	
+	public String updateMyReplica(String newReplica, int replicaLevel) {
+		System.out.println("Inside updateMyReplica with in port " + parameters.port + " and new replica " + newReplica);
+		parameters.myReplicas.set(replicaLevel, newReplica);
+		return "Sucess update replica";
+	}
+	
 	public String findKeySuccessor(String key,String value, String job){
+		
+		System.out.println( "checking for!!!!!!!!!!!!!!!!!!! "+job +"of "+key  );
+		
 		BigInteger tempKey=ShaGen.shaGenerator(key);
 		System.out.println("tempKey:"+tempKey);
-		String res=findSuccessor(tempKey);
+		String res = findSuccessor(tempKey);
+		OurRMI ourRMI;
 		
 		if(res.split(" ")[0].compareTo(parameters.nodeName.toString())==0){
 			if(job.compareTo("insert") == 0) {
 				System.out.println("Calling key insert with in port :"+parameters.port);
-				keyInsert(tempKey,value);
+				keyInsert(tempKey,value,0);
+				for(int i = 0; i < parameters.myReplicas.size(); i++) { 
+					ourRMI = new OurRMI(Integer.parseInt(parameters.myReplicas.get(i).split(" ")[1]), "keyInsert: " + tempKey + " " + value + " "+ String.valueOf(i+1));
+					ourRMI.result();
+				}
 			}
 			else {
 				System.out.println("Calling key retrieve with in port: "+parameters.port);
@@ -414,11 +478,17 @@ public class ClientHandler extends Thread {
 		}
 		else{
 			if(job.equals("insert")) {
-				OurRMI ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]), "keyInsert: " + tempKey + " " + value );
-				ourRMI.result();
+				for(int i=0;i<parameters.myReplicas.size()+1;i++){
+					ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]), "keyInsert: " + tempKey + " " + value +" "+i);
+					ourRMI.result();
+					if(i!=parameters.myReplicas.size()){
+						ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]),"getSuccessor:"+" :");
+						res=ourRMI.result();
+					}
+				}
 			}
 			else {
-				OurRMI ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]), "keyRetrieve: " + tempKey);
+				ourRMI=new OurRMI(Integer.parseInt(res.split(" ")[1]), "keyRetrieve: " + tempKey);
 				return ourRMI.result();
 			}
 		}
@@ -426,11 +496,19 @@ public class ClientHandler extends Thread {
 		return "success";
 	}
 	
-	public String keyInsert(BigInteger key,String value){
+	public String keyInsert(BigInteger key,String value, int replicaLevel){
 		System.out.println("Inside keyInsert with in port:"+parameters.port);
-		parameters.keyValue.put(key, value);
+		switch(replicaLevel) {
+			case 0: parameters.keyValue.put(key, value);
+					break;
+			case 1: parameters.keysAsReplica1.put(key, value);
+					break;
+			case 2: parameters.keysAsReplica2.put(key, value);
+					break;
+		}
 		return "success Insert";
 	}
+	
 	
 	public String keyRetrieve(BigInteger key){
 		System.out.println("Inside keyRetrieve with in port:"+parameters.port);
@@ -439,39 +517,148 @@ public class ClientHandler extends Thread {
 	
 	public String moveKeys() {
 		System.out.println("move keys in port:"+parameters.port);
-		String prevEntry = parameters.nodeName + " " + parameters.port;
+		
 		OurRMI ourRMI;
+		
 		ourRMI = new OurRMI(parameters.succPort, "getKeyValues:"+":"+":");
-		prevEntry = ourRMI.result1(true);
-		while(prevEntry.compareTo("end") != 0) {
-			System.out.println("Moving key " + new BigInteger(prevEntry.split(" ")[0]) + " to port " + parameters.port);
-			parameters.keyValue.put(new BigInteger(prevEntry.split(" ")[0]), prevEntry.split(" ")[1]);
-			prevEntry=ourRMI.result1(false);
-		}
+		updateReplicaKeysFromPred(ourRMI,parameters.keyValue);
 		ourRMI.closeSocket();
+		
+		
+		ourRMI = new OurRMI(parameters.predPort, "getKeyValuesPred:0"+":"+":");
+		updateReplicaKeysFromPred(ourRMI,parameters.keysAsReplica1);
+		ourRMI.closeSocket();
+		
+		
+		ourRMI = new OurRMI(parameters.predPort, "getKeyValuesPred:1"+":"+":");
+		updateReplicaKeysFromPred(ourRMI,parameters.keysAsReplica2);
+		ourRMI.closeSocket();
+		
+		ourRMI = new OurRMI(Integer.parseInt(parameters.myReplicas.get(1).split(" ")[1]), "updateReplicaKeysForReplica2:"+":");
+		ourRMI.result();
+		
 		return "sucess move";
 	}
 	
-	public String getKeyValues(	DataOutputStream out){
+	public String updateReplicaKeysForReplica2() {
+		parameters.keysAsReplica2 = new HashMap<BigInteger, String>();
+		OurRMI ourRMI = new OurRMI(parameters.predPort, "getKeyValuesPred:1"+":");
+		updateReplicaKeysFromPred(ourRMI, parameters.keysAsReplica2);
+		ourRMI.closeSocket();
 		
-		System.out.println("sending out: fuck "+parameters.port);
+		return "success update replica 2";
+	}
+	
+	public void updateReplicaKeysFromPred(OurRMI ourRMI,HashMap<BigInteger,String> temp){
+		String prevEntry = ourRMI.result1(true);
+		while(prevEntry.compareTo("end") != 0) {
+			System.out.println("Moving key " + new BigInteger(prevEntry.split(" ")[0]) + " to port " + parameters.port);
+			temp.put(new BigInteger(prevEntry.split(" ")[0]), prevEntry.split(" ")[1]);
+			prevEntry=ourRMI.result1(false);
+		}
+		
+	}
+	
+	public String getKeyValuesPred(DataOutputStream out,int replicaLevel){
+		HashMap<BigInteger,String> temp=parameters.keyValue;
+		
+		if(replicaLevel==1)
+			temp=parameters.keysAsReplica1;
+
+		for(BigInteger key: temp.keySet()){
+				try {
+					System.out.println("sending out:"+key);
+					out.writeUTF(key+" "+temp.get(key));		
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		
+		return "end";
+	}
+	
+	
+	public String getKeyValues(DataOutputStream out){
+		
+		System.out.println("Inside getKeyValues with in port "+parameters.port);
+		
+		//--new2			
+			parameters.keysAsReplica2= new HashMap<BigInteger, String>(parameters.keysAsReplica1);
+			parameters.keysAsReplica1 = new HashMap<BigInteger,String>();
+		//--new2
+		
+		
+		ArrayList<BigInteger> forDeletion=new ArrayList<BigInteger>();
+			
 		for(BigInteger key: parameters.keyValue.keySet()){
-			System.out.println("sending out: fuck1 "+key);
 			if(Vars.isInRange(true, false, key, parameters.nodeName, parameters.pred)){
 				try {
 					System.out.println("sending out:"+key);
+					parameters.keysAsReplica1.put(key, parameters.keyValue.get(key));
 					out.writeUTF(key+" "+parameters.keyValue.get(key));
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				parameters.keyValue.remove(key);
+				forDeletion.add(key);
+			}
+		}
+		
+		for(BigInteger key : forDeletion){
+			parameters.keyValue.remove(key);
+		}
+		
+		System.out.println("-------------------------------------------------------------------------");
+		System.out.println("Inside port "+parameters.port+" calling CLEAR replicas "+parameters.myReplicas.get(0)+" "+parameters.myReplicas.get(1));
+		
+		OurRMI ourRMI = new OurRMI(Integer.parseInt(parameters.myReplicas.get(0).split(" ")[1]), "clearReplica:0"+":");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(Integer.parseInt(parameters.myReplicas.get(1).split(" ")[1]), "clearReplica:1"+":");
+		ourRMI.result();
+		
+		ourRMI = new OurRMI(Integer.parseInt(parameters.myReplicas.get(0).split(" ")[1]), "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(Integer.parseInt(parameters.myReplicas.get(1).split(" ")[1]), "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+
+		System.out.println("-------------------------------------------------------------------------");
+		
+		
+		
+		for(BigInteger key: parameters.keyValue.keySet()) {
+			for(int i = 0; i < parameters.myReplicas.size(); i++) { 
+				ourRMI = new OurRMI(Integer.parseInt(parameters.myReplicas.get(i).split(" ")[1]), "keyInsert: " + key + " " + parameters.keyValue.get(key) + " "+ String.valueOf(i+1));
+				ourRMI.result();
 			}
 		}
 	
 		return "end";
 	}
 	
+	
+	public String clearReplica(int replicaLevel) {
+		if(replicaLevel == 0) {
+			parameters.keysAsReplica1.clear();
+		} else if(replicaLevel == 1) {
+			parameters.keysAsReplica2.clear();
+		}
+		
+		return "success clear replica";
+	}
+	
+	public String printReplicas(){
+		return "The replicas of "+parameters.nodeName + " are "+parameters.myReplicas.get(0)+" and "+parameters.myReplicas.get(1);
+	}
+	
+	public String printKeyValues() {
+		System.out.println("Printing replicas of port:"+parameters.nodeName);
+		System.out.println(parameters.keyValue);
+		System.out.println(parameters.keysAsReplica1);
+		return parameters.keysAsReplica2.toString();
+	}
 	
 }

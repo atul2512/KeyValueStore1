@@ -16,9 +16,10 @@ public class PeerVar {
 	
 	
 	HashMap<BigInteger,String> keyValue;
+	HashMap<BigInteger, String> keysAsReplica1;
+	HashMap<BigInteger, String> keysAsReplica2;
 	
-	
-	
+	List<String> myReplicas;
 	
 	PeerVar(int port,String filePath){
 		this.port=port;
@@ -33,9 +34,14 @@ public class PeerVar {
 			fingerTable.add(temp);
 		}
 		
-		
 		keyValue= new HashMap<BigInteger,String>();
+		keysAsReplica1 = new HashMap<BigInteger,String>();
+		keysAsReplica2 = new HashMap<BigInteger,String>();
 		
+		myReplicas = new ArrayList<String>();
+		
+		myReplicas.add(nodeName +" "+port);
+		myReplicas.add(nodeName +" "+port);
 	}
 	
 }

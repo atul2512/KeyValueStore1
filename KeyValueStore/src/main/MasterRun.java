@@ -76,8 +76,52 @@ public class MasterRun {
 		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" "+value+" "+"insert");
 		System.out.println(ourRMI.result());
 		
+		 key1="nuvvantenanavvu";
+		 value="https://www.youtube.com/watch?v=YQHsXMglC9A";
+		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" "+value+" "+"insert");
+		System.out.println(ourRMI.result());
+		
+		 key1="pillanuvvuleni";
+		 value="https://www.youtube.com/watch?v=YQHsXMglC9A";
+		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" "+value+" "+"insert");
+		System.out.println(ourRMI.result());
+		
+		 key1="ramayyavasthavaya";
+		 value="https://www.youtube.com/watch?v=YQHsXMglC9A";
+		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" "+value+" "+"insert");
+		System.out.println(ourRMI.result());
+		
+		 key1="roseroseroserose";
+		 value="https://www.youtube.com/watch?v=YQHsXMglC9A";
+		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" "+value+" "+"insert");
+		System.out.println(ourRMI.result());
+		
+		key1="potheponilera";
+		 value="https://www.youtube.com/watch?v=YQHsXMglC9A";
+		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" "+value+" "+"insert");
+		System.out.println(ourRMI.result());
+		
+		key1="Iamverygoodboy";
+		 value="https://www.youtube.com/watch?v=YQHsXMglC9A";
+		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" "+value+" "+"insert");
+		System.out.println(ourRMI.result());
+		
+		key1="srinivasisagoodboy";
+		 value="https://www.youtube.com/watch?v=YQHsXMglC9A";
+		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" "+value+" "+"insert");
+		System.out.println(ourRMI.result());
+		
 		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" deadbeef"+" "+"retrieve");
 		System.out.println(ourRMI.result());
+		
+		/*
+		ourRMI = new OurRMI(5710, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5711, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5712, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		*/
 		
 		ourRMI = new OurRMI(5713, "join"+":5710"+":"+":");
 		ourRMI.result();
@@ -105,6 +149,34 @@ public class MasterRun {
 		
 		ourRMI = new OurRMI(5710, "findKeySuccessor: "+ key1+" deadbeef"+" "+"retrieve");
 		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5710, "printReplicas"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		
+		
+		ourRMI = new OurRMI(5711, "printReplicas"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5712, "printReplicas"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5713, "printReplicas"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5714, "printReplicas"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5710, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5711, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5712, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5713, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5714, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+
+		
+		
 		
 	/*	
 		ourRMI = new OurRMI(5713, "join"+":5710"+":"+":");
