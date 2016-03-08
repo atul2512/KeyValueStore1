@@ -13,6 +13,7 @@ public class PeerVar {
 //	PeerNode Successor,Predecessor;
 	BigInteger succ,pred;
 	int succPort,predPort;
+	boolean serverUp=false;
 	
 	
 	HashMap<BigInteger,String> keyValue;
@@ -42,6 +43,7 @@ public class PeerVar {
 		
 		myReplicas.add(nodeName +" "+port);
 		myReplicas.add(nodeName +" "+port);
+		serverUp=true;
 	}
 	
 }

@@ -1,0 +1,69 @@
+package main;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.ConnectException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+public class HeartBeat extends Thread{
+
+	PeerVar parameters;
+	Socket client;
+	DataOutputStream out;
+
+
+	HeartBeat(PeerVar parameters){
+		this.parameters=parameters;
+	}
+	
+	public void run() {
+		while(true){
+		
+			try {
+				this.sleep(3000);
+				if(!parameters.serverUp)
+					break;
+				
+				client=new Socket("localhost",parameters.succPort);
+				out = new DataOutputStream(client.getOutputStream());
+				System.out.println("Port "+parameters.port +" ending connection with " + parameters.succPort);
+				out.writeUTF("Ending");
+				client.close();
+			}
+			catch(ConnectException e ){
+				System.out.println("My succ server is dead Please Help! . I am in "+ parameters.port + " and my successor is port:"+parameters.succPort);
+				
+				runRepair();
+				
+				break;
+			}
+			catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+	}
+	
+	
+	public void runRepair(){
+		BigInteger temp;
+		parameters.myReplicas.set(0,parameters.myReplicas.get(1));
+		parameters.succ=new BigInteger(parameters.myReplicas.get(0).split(" ")[0]);
+		
+		parameters.succPort=Integer.parseInt(parameters.myReplicas.get(0).split(" ")[1]);
+		OurRMI ourRMI = new OurRMI()
+	}
+	
+}

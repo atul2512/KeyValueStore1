@@ -1,12 +1,18 @@
 package main;
 
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class MasterRun {
 	
-	public static void main(String[] args) throws UnknownHostException, IOException{
+	public static void main(String[] args) {
 	
+	//	new MainHandler();
+	
+		
+		
 		PeerNode p1=new PeerNode(5710,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5678.txt");
 		PeerNode p2=new PeerNode(5711,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5679.txt");
 		PeerNode p3=new PeerNode(5712,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5680.txt");
@@ -175,6 +181,68 @@ public class MasterRun {
 		ourRMI = new OurRMI(5714, "printKeyValues"+":"+":"+":");
 		System.out.println(ourRMI.result());
 
+		
+		
+		p4.parameters.serverUp=false;
+		
+		ourRMI = new OurRMI(5713, "dummyFailure"+":"+":"+":");		
+		System.out.println(ourRMI.result());
+		
+		try {
+			Thread.currentThread().sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		ourRMI = new OurRMI(5710, "printReplicas"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5711, "printReplicas"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5712, "printReplicas"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5714, "printReplicas"+":"+":"+":");
+		System.out.println(ourRMI.result());
+	
+		
+		ourRMI = new OurRMI(5710, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5711, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5712, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		ourRMI = new OurRMI(5714, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		
+		ourRMI = new OurRMI(5710, "printFingerTable"+":5710"+":"+":");
+		ourRMI.result();
+		ourRMI = new OurRMI(5711, "printFingerTable"+":5710"+":"+":");
+		ourRMI.result();
+		ourRMI = new OurRMI(5712, "printFingerTable"+":5710"+":"+":");
+		ourRMI.result();
+		ourRMI = new OurRMI(5714, "printFingerTable"+":5710"+":"+":");
+		ourRMI.result();
+		
+		
+		
+	/*	
+		ourRMI = new OurRMI(5714, "printKeyValues"+":"+":"+":");
+		System.out.println(ourRMI.result());
+		*/
+		/*
+		
+	    try {
+			Socket client=new Socket("localhost",5714);
+		} catch (ConnectException e) {
+			System.out.println("sdfasdfasdf");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	*/
 		
 		
 		

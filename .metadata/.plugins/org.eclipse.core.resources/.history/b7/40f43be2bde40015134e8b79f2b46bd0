@@ -1,0 +1,13 @@
+package main;
+
+public class HeartBeat {
+
+	PeerVar parameters;
+	HeartBeat(PeerVar parameters){
+		this.parameters=parameters;
+	}
+	
+	public void run() {
+		
+	}
+}

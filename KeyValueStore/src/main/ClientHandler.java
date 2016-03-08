@@ -102,7 +102,25 @@ public class ClientHandler extends Thread {
 			case "clearReplica":
 				 out.writeUTF(clearReplica(Integer.parseInt(arguments[1])));
 				 break;
+			case "dummyFailure":
+				 dummyFailure(out);
+				 break;
+			case "assignMyReplicas":
+				 out.writeUTF(assignMyReplicas());
+				 break;
+			case "recoverStageOne":
+				out.writeUTF(recoverStageOne(out));
+				break;
+			case "recoverStageTwo":
+				out.writeUTF(recoverStageTwo());
+				break;
+			case "updateFingerTableInRepair":
+				out.writeUTF(updateFingerTableInRepair(Integer.parseInt(arguments[1]),arguments[2]));
+				break;
+			default: server.close();
 				
+			
+			
 			/*
 			 * case "moveKeys" : out.writeUTF(moveKeys(new
 			 * BigInteger(arguments[1])))); break;
@@ -120,7 +138,32 @@ public class ClientHandler extends Thread {
 		// finally{
 
 	}
+	
+	public String dummyFailure(DataOutputStream out){
+		
+	//	System.exit(0);
+		
+		try {
+			out.writeUTF("failure here on node port "+ parameters.port);
+			server.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "failure";
+	}
 
+	
+	public String updateFingerTableInRepair(int failedPort,String newNode){
+		for(int i=Vars.m-1;i>=0;i--){
+			if(parameters.fingerTable.get(i).port == failedPort){
+				parameters.fingerTable.get(i).node=new BigInteger(newNode.split(" ")[0]);
+				parameters.fingerTable.get(i).port=Integer.parseInt(newNode.split(" ")[1]);
+			}
+		}
+		return String.valueOf(parameters.predPort);
+	}
+	
 	public String closestPrecedingFinger(BigInteger id) {
 		System.out.println("called closestPrecedingFinger with argument: " + id + " with in port " + parameters.port);
 		for (int i = Vars.m - 1; i >= 0; i--) {
@@ -576,6 +619,32 @@ public class ClientHandler extends Thread {
 		}
 		
 		return "end";
+	}
+	
+	public String recoverStageOne(DataOutputStream out){
+		parameters.keyValue.putAll(parameters.keysAsReplica1);
+		parameters.keysAsReplica1.clear();
+		recoverStageTwo();
+		
+		System.out.println("Done inside the 3");
+/*
+			//updating r1 and r2 for my first replica
+			OurRMI ourRMI = new OurRMI(parameters.succPort,"recoverStagetwo:"+" :");
+			ourRMI.result();
+			
+			//updating r2 for my second replica
+			ourRMI = new OurRMI(Integer.parseInt(parameters.myReplicas.get(1).split(" ")[1]), "updateReplicaKeysForReplica2:"+":");
+			ourRMI.result();
+*/			
+		return "success stage one";
+	}
+	
+	public String recoverStageTwo(){
+		parameters.keysAsReplica1.putAll(parameters.keysAsReplica2);
+		parameters.keysAsReplica2.clear();
+		updateReplicaKeysForReplica2();
+
+		return "success stage two";
 	}
 	
 	

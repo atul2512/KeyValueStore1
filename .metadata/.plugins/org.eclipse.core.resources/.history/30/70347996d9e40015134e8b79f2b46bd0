@@ -1,0 +1,126 @@
+package main;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.ConnectException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+public class HeartBeat extends Thread{
+
+	PeerVar parameters;
+	Socket client;
+	DataOutputStream out;
+
+
+	HeartBeat(PeerVar parameters){
+		this.parameters=parameters;
+	}
+	
+	public void run() {
+		while(true){
+		
+			try {
+				this.sleep(3000);
+				if(!parameters.serverUp)
+					break;
+				
+				client=new Socket("localhost",parameters.succPort);
+				out = new DataOutputStream(client.getOutputStream());
+				System.out.println("Port "+parameters.port +" ending connection with " + parameters.succPort);
+				out.writeUTF("Ending");
+				client.close();
+			}
+			catch(ConnectException e ){
+				System.out.println("My succ server is dead Please Help! . I am in "+ parameters.port + " and my successor is port:"+parameters.succPort);
+				
+				runRepair();
+				
+			//	break;
+			}
+			catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		
+	}
+	
+	
+	public void runRepair(){
+		int temp=Integer.parseInt(parameters.myReplicas.get(0).split(" ")[1]);
+		OurRMI ourRMI;
+		
+		System.out.println("run Repair:Inside run repair START");
+
+		//update my replica
+		parameters.myReplicas.set(0,parameters.myReplicas.get(1));
+		ourRMI = new OurRMI(Integer.parseInt(parameters.myReplicas.get(0).split(" ")[1]), "getSuccessor:" + ": " + ": " + ": " + ": ");
+		parameters.myReplicas.set(1,ourRMI.result());
+		
+		System.out.println("run Repair:update my replicas done");
+		
+		//update my successor
+		parameters.succ=new BigInteger(parameters.myReplicas.get(0).split(" ")[0]);
+		parameters.succPort=Integer.parseInt(parameters.myReplicas.get(0).split(" ")[1]);
+		
+		System.out.println("run Repair:update my successors done");
+
+		
+		//update your successor's predecessor
+		ourRMI = new OurRMI(parameters.succPort, "setPredecessor:" + parameters.nodeName+":"+ parameters.port+": " + ": " + ": ");
+		ourRMI.result();
+		
+		//update your predecessor's replicas
+		ourRMI = new OurRMI(parameters.predPort,"assignMyReplicas:"+" :");
+		ourRMI.result();
+		
+		System.out.println("run Repair: Moving kets started");
+		ourRMI = new OurRMI(parameters.succPort,"recoverStageOne:"+" :");
+		ourRMI.result();
+
+		
+		System.out.println("run Repair: Updating the finger tables");
+		
+		for(int i=Vars.m-1;i>=0;i--){
+			if(parameters.fingerTable.get(i).port == temp){
+				parameters.fingerTable.get(i).node=parameters.succ;
+				parameters.fingerTable.get(i).port=parameters.succPort;
+			}
+		}
+		
+		BigInteger prevNodeName = parameters.predPort;
+		while(prevNodeName.compareTo(parameters.nodeName)!=0){
+			ourRMI = new OurRMI(prevNodeName,"updateFingerTableInRepair:"+parameters.succ+" "+parameters.succPort + ":");
+			ourRMI.result();
+			
+			updateFingerTableInRepair(){
+				
+			}
+		}
+		
+		System.out.println("run Repair: Updating the finger tables DONE DONE !!!!");
+		
+		
+		
+		
+		
+		System.out.println("run Repair:Inside run repair END");
+		
+		
+		
+
+		
+	}
+	
+}

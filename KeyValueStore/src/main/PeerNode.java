@@ -14,27 +14,44 @@ public class PeerNode {
 		parameters=new PeerVar(port2,filePath2);
 		new Thread(new Runnable(){
 			public void run(){
-				try {
+				
 					ServerThread();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
 			}
 		}).start();
+		
+		
+		heartBeatSucc();
+		
+	}
+	
+	public void heartBeatSucc(){
+		new HeartBeat(parameters).start();
 	}
 
+	public void setServerUp(boolean par){
+		parameters.serverUp=par;
+	}
 
-
-	public void ServerThread() throws IOException{
-		ServerSocket s = new ServerSocket(parameters.port);
+	public void ServerThread() {
+		ServerSocket s;
+		try {
+			s = new ServerSocket(parameters.port);
+			 while(parameters.serverUp)
+		        {  	
+		        	Socket conn = s.accept();
+		      //  	System.out.println("Connection received from: " + conn.getInetAddress().getHostName() + " : " + conn.getPort());
+		        	
+		        	new ClientHandler(conn,parameters.port,parameters).start();  
+		        }
+			 s.close();
+			 System.out.println("thread down");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     //	System.out.println("Server socket created at port "+parameters.port+" and waiting....");
-        while(true)
-        {  	
-        	Socket conn = s.accept();
-      //  	System.out.println("Connection received from: " + conn.getInetAddress().getHostName() + " : " + conn.getPort());
-        	new ClientHandler(conn,parameters.port,parameters).start();  
-        }
+       
 	}
 	
 	public void asClient(String serverName,int port) throws UnknownHostException, IOException{

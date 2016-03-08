@@ -1,0 +1,19 @@
+package main;
+
+import java.net.Socket;
+
+public class HeartBeat extends Thread{
+
+	PeerVar parameters;
+	Socket client;
+
+	HeartBeat(PeerVar parameters){
+		this.parameters=parameters;
+	}
+	
+	public void run() {
+		client=new Socket("localhost",port);
+		
+		
+	}
+}

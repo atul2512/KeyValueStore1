@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 public class OurRMI {
@@ -31,15 +32,19 @@ DataInputStream in;
 		     in =new DataInputStream(inFromServer);
 	     
 	     
-	//	     System.out.println("Server says " + in.readUTF());
+		     System.out.println("trying to connect");
 		
-		} catch (UnknownHostException e) {
+		}
+		catch (UnknownHostException e) {
+			 System.out.println("trying to connect failed unknownhostexception");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			 System.out.println("trying to connect failed ioexception");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	
 	}
 	
