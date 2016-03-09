@@ -1,0 +1,8 @@
+package main;
+
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
+public interface Constants {
+	PrintStream writetoEngineer; 
+}

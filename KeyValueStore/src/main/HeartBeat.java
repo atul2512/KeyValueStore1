@@ -1,7 +1,10 @@
 package main;
 
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.math.BigInteger;
 import java.net.ConnectException;
 import java.net.Socket;
@@ -12,9 +15,12 @@ public class HeartBeat extends Thread{
 	PeerVar parameters;
 	Socket client;
 	DataOutputStream out;
+	Constants global = new Constants();
 
 
 	HeartBeat(PeerVar parameters){
+
+		
 		this.parameters=parameters;
 	}
 	
@@ -28,13 +34,14 @@ public class HeartBeat extends Thread{
 				
 				client=new Socket("localhost",parameters.succPort);
 				out = new DataOutputStream(client.getOutputStream());
-				System.out.println("Port "+parameters.port +" ending connection with " + parameters.succPort);
+				//System.out.println("Port "+parameters.port +" ending connection with " + parameters.succPort);
 				out.writeUTF("Ending");
 				client.close();
 			}
 			catch(ConnectException e ){
+				 System.setOut(global.logStream);
 				System.out.println("My succ server is dead Please Help! . I am in "+ parameters.port + " and my successor is port:"+parameters.succPort);
-				
+				System.setOut(global.originalStream);
 				runRepair();
 				
 			//	break;
@@ -60,7 +67,7 @@ public class HeartBeat extends Thread{
 	public void runRepair(){
 		int failedPort=Integer.parseInt(parameters.myReplicas.get(0).split(" ")[1]);
 		OurRMI ourRMI;
-		
+		System.setOut(global.logStream);
 		System.out.println("run Repair:Inside run repair START");
 
 		//update my replica
@@ -131,7 +138,7 @@ public class HeartBeat extends Thread{
 		
 		
 		System.out.println("run Repair:Inside run repair END");
-		
+		System.setOut(global.originalStream);
 		
 		
 

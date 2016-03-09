@@ -1,0 +1,299 @@
+Hash for port 5405 735
+FINGER TABLE of Port:5405
+736 737 735 5405
+737 739 735 5405
+739 743 735 5405
+743 751 735 5405
+751 767 735 5405
+767 799 735 5405
+799 863 735 5405
+863 991 735 5405
+991 223 735 5405
+223 735 735 5405
+Hash for port 5645 670
+basic join executed:670
+FINGER TABLE of Port:5645
+671 672 670 5645
+672 674 670 5645
+674 678 670 5645
+678 686 670 5645
+686 702 670 5645
+702 734 670 5645
+734 798 670 5645
+798 926 670 5645
+926 158 670 5645
+158 670 670 5645
+Hash for port 6141 178
+basic join executed:178
+FINGER TABLE of Port:6141
+179 180 178 6141
+180 182 178 6141
+182 186 178 6141
+186 194 178 6141
+194 210 178 6141
+210 242 178 6141
+242 306 178 6141
+306 434 178 6141
+434 690 178 6141
+690 178 178 6141
+Inside the find successor with id:1008 with in port 6141
+called findPredecessor with argument: 1008 with in port 6141
+178 178
+Inside the get successor with in port 6141
+Calling key insert with in port :6141
+Inside keyInsert with in port:6141
+Inside keyInsert with in port:6141
+Inside keyInsert with in port:6141
+**MENU**
+1. Join node
+2. Insert Key
+3. Retrieve Key
+4. Quit
+Enter choice:
+Hash for port 5799 421
+basic join executed:421
+FINGER TABLE of Port:5799
+422 423 421 5799
+423 425 421 5799
+425 429 421 5799
+429 437 421 5799
+437 453 421 5799
+453 485 421 5799
+485 549 421 5799
+549 677 421 5799
+677 933 421 5799
+933 421 421 5799
+tempKey:1008
+Inside the find successor with id:1008 with in port 5799
+called findPredecessor with argument: 1008 with in port 5799
+421 421
+Inside the get successor with in port 5799
+Calling key insert with in port :5799
+Inside keyInsert with in port:5799
+Inside keyInsert with in port:5799
+Inside keyInsert with in port:5799
+tempKey:1008
+Inside the find successor with id:1008 with in port 5799
+called findPredecessor with argument: 1008 with in port 5799
+421 421
+Inside the get successor with in port 5799
+Calling key retrieve with in port: 5799
+Inside keyRetrieve with in port:5799
+Hash for port 5337 670
+basic join executed:670
+FINGER TABLE of Port:5337
+671 672 670 5337
+672 674 670 5337
+674 678 670 5337
+678 686 670 5337
+686 702 670 5337
+702 734 670 5337
+734 798 670 5337
+798 926 670 5337
+926 158 670 5337
+158 670 670 5337
+Hash for port 5449 701
+basic join executed:701
+FINGER TABLE of Port:5449
+702 703 701 5449
+703 705 701 5449
+705 709 701 5449
+709 717 701 5449
+717 733 701 5449
+733 765 701 5449
+765 829 701 5449
+829 957 701 5449
+957 189 701 5449
+189 701 701 5449
+Hash for port 5737 967
+INIT FINGER TABLE START in port:5737
+Inside the find successor with id:968 with in port 5449
+called findPredecessor with argument: 968 with in port 5449
+701 701
+Inside the get successor with in port 5449
+result is:701 5449
+Inside the get pred with in port 5449
+is in Range0
+is in Range1
+is in Range2
+is in Range3
+is in Range4
+is in Range5
+is in Range6
+is in Range7
+is in Range8
+INIT FINGER TABLE DONE:
+FINGER TABLE of Port:5737
+968 969 701 5449
+969 971 701 5449
+971 975 701 5449
+975 983 701 5449
+983 999 701 5449
+999 7 701 5449
+7 71 701 5449
+71 199 701 5449
+199 455 701 5449
+455 967 701 5449
+called findPredecessor with argument: 966 with in port 5737
+967 701
+called closestPrecedingFinger with argument: 966 with in port 5737
+closestPrecedingFinger returning: 701 5449
+new nodePrime : 701 5449
+Inside the get successor with in port 5449
+new nodePrime successor : 701
+Inside the get successor with in port 5737
+called findPredecessor with argument: 965 with in port 5737
+967 701
+called closestPrecedingFinger with argument: 965 with in port 5737
+closestPrecedingFinger returning: 701 5449
+new nodePrime : 701 5449
+Inside the get successor with in port 5449
+new nodePrime successor : 701
+Inside the get successor with in port 5737
+called findPredecessor with argument: 963 with in port 5737
+967 701
+called closestPrecedingFinger with argument: 963 with in port 5737
+closestPrecedingFinger returning: 701 5449
+new nodePrime : 701 5449
+Inside the get successor with in port 5449
+new nodePrime successor : 701
+Inside the get successor with in port 5737
+called findPredecessor with argument: 959 with in port 5737
+967 701
+called closestPrecedingFinger with argument: 959 with in port 5737
+closestPrecedingFinger returning: 701 5449
+new nodePrime : 701 5449
+Inside the get successor with in port 5449
+new nodePrime successor : 701
+Inside the get successor with in port 5737
+called findPredecessor with argument: 951 with in port 5737
+967 701
+called closestPrecedingFinger with argument: 951 with in port 5737
+closestPrecedingFinger returning: 701 5449
+new nodePrime : 701 5449
+Inside the get successor with in port 5449
+new nodePrime successor : 701
+Inside the get successor with in port 5737
+called findPredecessor with argument: 935 with in port 5737
+967 701
+called closestPrecedingFinger with argument: 935 with in port 5737
+closestPrecedingFinger returning: 701 5449
+new nodePrime : 701 5449
+Inside the get successor with in port 5449
+new nodePrime successor : 701
+Inside the get successor with in port 5737
+called findPredecessor with argument: 903 with in port 5737
+967 701
+called closestPrecedingFinger with argument: 903 with in port 5737
+closestPrecedingFinger returning: 701 5449
+new nodePrime : 701 5449
+Inside the get successor with in port 5449
+new nodePrime successor : 701
+Inside the get successor with in port 5737
+called findPredecessor with argument: 839 with in port 5737
+967 701
+called closestPrecedingFinger with argument: 839 with in port 5737
+closestPrecedingFinger returning: 701 5449
+new nodePrime : 701 5449
+Inside the get successor with in port 5449
+new nodePrime successor : 701
+Inside the get successor with in port 5737
+called findPredecessor with argument: 711 with in port 5737
+967 701
+called closestPrecedingFinger with argument: 711 with in port 5737
+closestPrecedingFinger returning: 701 5449
+new nodePrime : 701 5449
+Inside the get successor with in port 5449
+new nodePrime successor : 701
+Inside the get successor with in port 5737
+called findPredecessor with argument: 455 with in port 5737
+967 701
+Inside the get successor with in port 5449
+Inside the set pred with in port 5449
+Inside the set successor with in port 5449
+trying to connect failed ioexception
+Hash for port 5572 45
+basic join executed:45
+FINGER TABLE of Port:5572
+46 47 45 5572
+47 49 45 5572
+49 53 45 5572
+53 61 45 5572
+61 77 45 5572
+77 109 45 5572
+109 173 45 5572
+173 301 45 5572
+301 557 45 5572
+557 45 45 5572
+Hash for port 5787 237
+basic join executed:237
+FINGER TABLE of Port:5787
+238 239 237 5787
+239 241 237 5787
+241 245 237 5787
+245 253 237 5787
+253 269 237 5787
+269 301 237 5787
+301 365 237 5787
+365 493 237 5787
+493 749 237 5787
+749 237 237 5787
+Hash for port 5150 944
+basic join executed:944
+FINGER TABLE of Port:5150
+945 946 944 5150
+946 948 944 5150
+948 952 944 5150
+952 960 944 5150
+960 976 944 5150
+976 1008 944 5150
+1008 48 944 5150
+48 176 944 5150
+176 432 944 5150
+432 944 944 5150
+tempKey:1008
+Inside the find successor with id:1008 with in port 5572
+called findPredecessor with argument: 1008 with in port 5572
+45 45
+Inside the get successor with in port 5572
+Calling key insert with in port :5572
+Inside keyInsert with in port:5572
+Inside keyInsert with in port:5572
+Inside keyInsert with in port:5572
+tempKey:1008
+Inside the find successor with id:1008 with in port 5572
+called findPredecessor with argument: 1008 with in port 5572
+45 45
+Inside the get successor with in port 5572
+Calling key retrieve with in port: 5572
+Inside keyRetrieve with in port:5572
+Hash for port 6282 270
+basic join executed:270
+FINGER TABLE of Port:6282
+271 272 270 6282
+272 274 270 6282
+274 278 270 6282
+278 286 270 6282
+286 302 270 6282
+302 334 270 6282
+334 398 270 6282
+398 526 270 6282
+526 782 270 6282
+782 270 270 6282
+tempKey:1008
+Inside the find successor with id:1008 with in port 6282
+called findPredecessor with argument: 1008 with in port 6282
+270 270
+Inside the get successor with in port 6282
+Calling key insert with in port :6282
+Inside keyInsert with in port:6282
+Inside keyInsert with in port:6282
+Inside keyInsert with in port:6282
+tempKey:1008
+Inside the find successor with id:1008 with in port 6282
+called findPredecessor with argument: 1008 with in port 6282
+270 270
+Inside the get successor with in port 6282
+Calling key retrieve with in port: 6282
+Inside keyRetrieve with in port:6282
+trying to connect failed ioexception

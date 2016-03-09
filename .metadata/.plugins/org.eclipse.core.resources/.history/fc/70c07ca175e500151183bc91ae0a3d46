@@ -1,0 +1,9 @@
+package main;
+
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
+public abstract class Constants {
+	PrintStream logStream = new PrintStream(
+		     new FileOutputStream("Engineer.txt", true));
+}

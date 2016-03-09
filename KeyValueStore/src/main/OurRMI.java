@@ -18,7 +18,7 @@ OutputStream outToServer;// = client.getOutputStream();
 DataOutputStream out ;
 InputStream inFromServer;
 DataInputStream in;
-
+Constants global = new Constants();
 	public OurRMI(int port,String arguments){
 
 			this.port=port;
@@ -32,15 +32,19 @@ DataInputStream in;
 		     in =new DataInputStream(inFromServer);
 	     
 	     
-		     System.out.println("trying to connect");
+		     //System.out.println("trying to connect");
 		
 		}
 		catch (UnknownHostException e) {
+			System.setOut(global.logStream);
 			 System.out.println("trying to connect failed unknownhostexception");
+			 System.setOut(global.originalStream);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			System.setOut(global.logStream);
 			 System.out.println("trying to connect failed ioexception");
+			 System.setOut(global.originalStream);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

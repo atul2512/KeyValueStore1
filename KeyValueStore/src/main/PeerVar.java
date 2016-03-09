@@ -1,11 +1,15 @@
 package main;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.math.BigInteger;
 import java.util.LinkedHashMap;
 import java.util.*;
 
 public class PeerVar {
 
+	Constants global = new Constants();
 	String filePath="";
 	int port;
 	List<Successor> fingerTable;
@@ -23,11 +27,16 @@ public class PeerVar {
 	List<String> myReplicas;
 	
 	PeerVar(int port,String filePath){
+		
+
 		this.port=port;
 		this.filePath=filePath;
 		fingerTable=new ArrayList<Successor>();
 		nodeName=ShaGen.shaGenerator("127.0.0.1:"+port);
+		System.setOut(global.logStream);
 		System.out.println("Hash for port "+port+" "+nodeName);
+		System.setOut(global.originalStream);
+		
 		
 		for(int i=0;i<Vars.m;i++){
 			Successor temp=new Successor(new BigInteger("2").pow(i).add(this.nodeName).mod(new BigInteger("2").pow(Vars.m)),

@@ -1,0 +1,29 @@
+package main;
+
+import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Random;
+import java.util.Set;
+
+public class KeyValueStoreSimulator {
+	
+	public static ArrayList<Integer> arr;
+	public static int index=0;
+	public static int getRandomPort(){
+		
+		return arr.get(index++);
+		
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		for(int i=5000;i<6500;i++)
+			arr.add(i);
+		Collections.shuffle(arr);
+		
+		for(int j=0;j<5;j++){
+			System.out.println(getRandomPort());
+		}
+	}
+
+}

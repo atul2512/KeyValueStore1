@@ -4,15 +4,13 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class MasterRun {
 	
 	public static void main(String[] args) {
 	
-	//	new MainHandler();
 	
-		
-		
 		PeerNode p1=new PeerNode(5710,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5678.txt");
 		PeerNode p2=new PeerNode(5711,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5679.txt");
 		PeerNode p3=new PeerNode(5712,"C:/Users/srinivasMaram/workspace/KeyValueStore/keys/5680.txt");

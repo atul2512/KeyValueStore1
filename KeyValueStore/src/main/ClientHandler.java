@@ -10,13 +10,14 @@ public class ClientHandler extends Thread {
 	Socket server;
 	// int port;
 	PeerVar parameters;
-	
+	Constants global = new Constants();
 
 	// Map<BigInteger,Successor> fingerTable;
 	ClientHandler(Socket conn, int port, PeerVar parameters) {
 		this.server = conn;
 		// this.port=port;
 		this.parameters = parameters;
+		
 	}
 
 	public void run() {
@@ -28,7 +29,7 @@ public class ClientHandler extends Thread {
 			in = new DataInputStream(server.getInputStream());
 			String received = in.readUTF();
 			String[] arguments = received.split(":");
-			System.out.println("recevied msg: " + received);
+			//System.out.println("recevied msg: " + received);
 			
 			out = new DataOutputStream(server.getOutputStream());
 
@@ -165,6 +166,8 @@ public class ClientHandler extends Thread {
 	}
 	
 	public String closestPrecedingFinger(BigInteger id) {
+		System.setOut(global.logStream);
+		
 		System.out.println("called closestPrecedingFinger with argument: " + id + " with in port " + parameters.port);
 		for (int i = Vars.m - 1; i >= 0; i--) {
 			if (Vars.isInRange(false, false, parameters.nodeName, id, parameters.fingerTable.get(i).node)) {
@@ -178,20 +181,25 @@ public class ClientHandler extends Thread {
 		}
 		System.out.println("called closestPrecedingFinger and returning: " + parameters.nodeName.toString() + " "
 				+ this.parameters.port);
+		System.setOut(global.originalStream);
+		
 		return parameters.nodeName.toString() + " " + this.parameters.port;
 	}
 
 	public String printFingerTable() {
+		System.setOut(global.logStream);
+		
 		System.out.println("FINGER TABLE of Port:"+parameters.port);
 		for (int i = 0; i < parameters.fingerTable.size(); i++)
 			System.out.println(
 					parameters.fingerTable.get(i).intervalStart + " " + parameters.fingerTable.get(i).intervalEnd + " "
 							+ parameters.fingerTable.get(i).node + " " + parameters.fingerTable.get(i).port);
+		System.setOut(global.originalStream);
 		return parameters.nodeName.toString();
 	}
 
 	public String findPredecessor(BigInteger id) {
-
+		System.setOut(global.logStream);
 		System.out.println("called findPredecessor with argument: " + id + " with in port " + parameters.port);
 		System.out.println(parameters.nodeName + " " + parameters.succ);
 		if (parameters.nodeName.compareTo(parameters.succ) == 0)
@@ -222,16 +230,18 @@ public class ClientHandler extends Thread {
 			} else
 				break;
 		}
+		System.setOut(global.originalStream);
 		return nodePrime.toString() + " " + resultPort;
 	}
 
 	public String findSuccessor(BigInteger id) {
-
+		System.setOut(global.logStream);
 		System.out.println("Inside the find successor with id:" + id + " with in port " + parameters.port);
 		
-
+		System.setOut(global.originalStream);
 		OurRMI ourRMI = new OurRMI(Integer.parseInt(findPredecessor(id).split(" ")[1]),
 				"getSuccessor:" + ": " + ": " + ": " + ": ");
+		
 		return ourRMI.result();
 	}
 
@@ -244,9 +254,10 @@ public class ClientHandler extends Thread {
 			parameters.pred = parameters.nodeName;
 			parameters.succPort = parameters.port;
 			parameters.predPort = parameters.port;
-
+			System.setOut(global.logStream);
 			System.out.println("basic join executed:" + parameters.succ);
 			printFingerTable();
+			System.setOut(global.originalStream);
 			
 			return "Success in join";
 		} catch (UnknownHostException e) {
@@ -255,7 +266,7 @@ public class ClientHandler extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		System.setOut(global.logStream);
 		initFingerTable(friend);
 		System.out.println("INIT FINGER TABLE DONE:");
 		printFingerTable();
@@ -291,6 +302,7 @@ public class ClientHandler extends Thread {
 		updateReplicas();
 		
 		moveKeys();
+		System.setOut(global.originalStream);
 		return "success in join";
 		// get successor S
 		// move the keys to n
@@ -300,7 +312,9 @@ public class ClientHandler extends Thread {
 	
 	
 	public String setPredecessor(BigInteger node,int port){
+		System.setOut(global.logStream);
 		System.out.println("Inside the set pred with in port " + parameters.port);
+		System.setOut(global.originalStream);
 
 		
 		parameters.pred=node;
@@ -311,7 +325,9 @@ public class ClientHandler extends Thread {
 	}
 
 	public String setSuccessor(BigInteger node,int port) {
+		System.setOut(global.logStream);
 		System.out.println("Inside the set successor with in port " + parameters.port);
+		System.setOut(global.originalStream);
 
 		
 		parameters.succ=node;
@@ -321,19 +337,23 @@ public class ClientHandler extends Thread {
 	}
 	
 	public String getPredecessor() {
+		System.setOut(global.logStream);
 		System.out.println("Inside the get pred with in port " + parameters.port);
+		System.setOut(global.originalStream);
 
 		return parameters.pred.toString() + " " + String.valueOf(parameters.predPort);
 	}
 
 	public String getSuccessor() {
+		System.setOut(global.logStream);
 		System.out.println("Inside the get successor with in port " + parameters.port);
+		System.setOut(global.originalStream);
 
 		return parameters.succ.toString() + " " + String.valueOf(parameters.succPort);
 	}
 
 	public void initFingerTable(int port) {
-
+		
 		System.out.println("INIT FINGER TABLE START in port:" + parameters.port);
 		OurRMI ourRMI = new OurRMI(port,
 				"findSuccessor:" + parameters.fingerTable.get(0).intervalStart.toString() + ": " + ": " + ": ");
@@ -498,8 +518,8 @@ public class ClientHandler extends Thread {
 	
 	public String findKeySuccessor(String key,String value, String job){
 		
-		System.out.println( "checking for!!!!!!!!!!!!!!!!!!! "+job +"of "+key  );
-		
+		//System.out.println( "checking for!!!!!!!!!!!!!!!!!!! "+job +"of "+key  );
+		System.setOut(global.logStream);
 		BigInteger tempKey=ShaGen.shaGenerator(key);
 		System.out.println("tempKey:"+tempKey);
 		String res = findSuccessor(tempKey);
@@ -535,11 +555,12 @@ public class ClientHandler extends Thread {
 				return ourRMI.result();
 			}
 		}
-		
+		System.setOut(global.originalStream);
 		return "success";
 	}
 	
 	public String keyInsert(BigInteger key,String value, int replicaLevel){
+		System.setOut(global.logStream);
 		System.out.println("Inside keyInsert with in port:"+parameters.port);
 		switch(replicaLevel) {
 			case 0: parameters.keyValue.put(key, value);
@@ -549,12 +570,15 @@ public class ClientHandler extends Thread {
 			case 2: parameters.keysAsReplica2.put(key, value);
 					break;
 		}
+		System.setOut(global.originalStream);
 		return "success Insert";
 	}
 	
 	
 	public String keyRetrieve(BigInteger key){
+		System.setOut(global.logStream);
 		System.out.println("Inside keyRetrieve with in port:"+parameters.port);
+		System.setOut(global.originalStream);
 		return parameters.keyValue.get(key);
 	}
 	

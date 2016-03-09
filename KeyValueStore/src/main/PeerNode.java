@@ -8,8 +8,9 @@ import java.util.Date;
 
 public class PeerNode {
 	PeerVar parameters;
-
+	Constants global = new Constants();
 	public PeerNode(int port2, String filePath2) {
+	
 		// TODO Auto-generated constructor stub
 		parameters=new PeerVar(port2,filePath2);
 		new Thread(new Runnable(){
@@ -19,6 +20,8 @@ public class PeerNode {
 				
 			}
 		}).start();
+		
+		
 		
 		
 		heartBeatSucc();
@@ -45,7 +48,9 @@ public class PeerNode {
 		        	new ClientHandler(conn,parameters.port,parameters).start();  
 		        }
 			 s.close();
+			 System.setOut(global.logStream);
 			 System.out.println("thread down");
+			 System.setOut(global.originalStream);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -56,6 +61,7 @@ public class PeerNode {
 	
 	public void asClient(String serverName,int port) throws UnknownHostException, IOException{
 		Socket client=new Socket(serverName,port);
+		System.setOut(global.logStream);
 		System.out.println("Just connected to " 
 				 + client.getRemoteSocketAddress());
 		OutputStream outToServer = client.getOutputStream();
@@ -66,6 +72,7 @@ public class PeerNode {
         DataInputStream in =
                 new DataInputStream(inFromServer);
         System.out.println("Server says " + in.readUTF());
+        System.setOut(global.originalStream);
         client.close();
 	}
 	

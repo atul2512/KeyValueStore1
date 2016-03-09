@@ -1,0 +1,11 @@
+package main;
+
+import java.io.PrintStream;
+
+public class Constants {
+	
+	public PrintStream logStream = null;
+	public PrintStream originalStream = System.out;
+	
+
+}
